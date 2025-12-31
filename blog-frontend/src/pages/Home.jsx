@@ -1,8 +1,18 @@
+import HeroSection from "../components/home/HeroSection";
+import Marquee from "../components/home/Marquee";
+import LatestStories from "../components/home/LatestStories";
+import CategoriesSection from "../components/home/CategoriesSection";
+import Newsletter from "../components/home/Newsletter";
+
 const Home = () => {
   return (
-    <div className="p-10 text-3xl font-bold text-center text-indigo-600">
-      Blog Home Page
-    </div>
+    <>
+      <HeroSection />
+      <Marquee />
+      <LatestStories />
+      <CategoriesSection />
+      <Newsletter />
+    </>
   );
 };
 
