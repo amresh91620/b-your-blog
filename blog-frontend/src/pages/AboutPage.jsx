@@ -1,143 +1,161 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Minus } from 'lucide-react';
+import { ArrowUpRight, Minus, Quote, Fingerprint, Globe } from 'lucide-react';
 
 const AboutPage = () => {
   return (
-    <div className="bg-[#fafafa] text-slate-900 selection:bg-indigo-500 selection:text-white">
-
-      {/* 1. HERO: The Statement */}
-      <section className="relative pt-32 pb-16 md:pt-15 md:pb-24 px-6 lg:px-12 border-b border-slate-100 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
-            <div className="lg:col-span-8">
+    <div className="bg-[#fafafa] text-slate-900 selection:bg-orange-500 selection:text-white min-h-screen font-sans">
+      
+      {/* Global Container */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        
+        {/* 1. HERO SECTION: Editorial Header */}
+        <section className="relative pt-24 pb-16 border-b border-slate-200 bg-white -mx-6 lg:-mx-12 px-6 lg:px-12">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
+              <div className="lg:col-span-8">
+                <motion.div 
+                  initial={{ opacity: 0, x: -10 }} 
+                  animate={{ opacity: 1, x: 0 }}
+                  className="flex items-center gap-3 mb-6 text-orange-600"
+                >
+                  <Minus size={24} strokeWidth={4} />
+                  <span className="text-[10px] font-black tracking-[0.5em] uppercase">Est. MMXXIV</span>
+                </motion.div>
+                <motion.h1 
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-6xl md:text-9xl font-black leading-[0.85] tracking-tighter text-slate-900 uppercase"
+                >
+                  The <br /> 
+                  <span className="font-serif italic font-light text-orange-500">Manifesto.</span>
+                </motion.h1>
+              </div>
+              
               <motion.div 
-                initial={{ opacity: 0, x: -10 }} 
-                animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-3 mb-6 text-indigo-600"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="lg:col-span-4 lg:pb-4"
               >
-                <Minus size={20} strokeWidth={3} />
-                <span className="text-[10px] font-black tracking-[0.5em] uppercase">Est. 2025</span>
+                <p className="text-sm md:text-base text-slate-500 leading-relaxed font-medium border-l-2 border-orange-500 pl-6 uppercase tracking-wider">
+                  B-Your Blog is a curated digital anthology where human creativity meets industrial precision.
+                </p>
               </motion.div>
-              <motion.h1 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-5xl md:text-8xl font-serif italic leading-[0.9] tracking-tighter"
-              >
-                Stories that <br /> <span className="text-slate-300">Resonate.</span>
-              </motion.h1>
             </div>
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="lg:col-span-4"
-            >
-              <p className="text-[13px] md:text-sm text-slate-500 leading-relaxed font-light max-w-xs">
-                B-Your Blog is a curated digital space where writers, thinkers, and creators converge. 
-                Our mission is to deliver content that informs, inspires, and engages readers in thoughtful dialogue.
+          </div>
+        </section>
+
+        {/* 2. VISION & STATS: Refined Layout */}
+        <section className="py-24 border-b border-slate-200">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            
+            <div className="lg:col-span-5 relative">
+              <div className="aspect-[4/5] overflow-hidden bg-slate-100 relative group">
+                <img 
+                  src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80" 
+                  alt="Minimal Workspace" 
+                  className="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out"
+                />
+                <div className="absolute inset-0 bg-orange-500/10 mix-blend-multiply opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+              {/* Floating Stat Card */}
+              <div className="absolute -bottom-8 -right-8 bg-slate-900 text-white p-8 shadow-[20px_20px_60px_rgba(0,0,0,0.15)]">
+                <p className="text-4xl font-serif italic text-orange-500 leading-none">120K+</p>
+                <p className="text-[9px] tracking-[0.3em] uppercase font-black text-slate-400 mt-2">Active Readers</p>
+                <Globe className="absolute top-2 right-2 text-white/5" size={40} />
+              </div>
+            </div>
+
+            <div className="lg:col-span-7 lg:pl-12 space-y-10">
+              <div className="space-y-4">
+                <Quote className="text-orange-500 opacity-20" size={48} />
+                <h2 className="text-5xl font-black text-slate-900 uppercase tracking-tighter leading-none">
+                  Substance <br /> <span className="font-serif italic font-light lowercase text-orange-500">over</span> Noise.
+                </h2>
+              </div>
+              
+              <p className="text-lg text-slate-600 leading-relaxed max-w-xl font-medium">
+                In an era of infinite scrolls, we choose <span className="text-slate-900 underline decoration-orange-500 decoration-2 underline-offset-8">intentionality</span>. Every article is a deep dive, every visual is engineered, and every story is a legacy.
               </p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. VISION: Visual & Stat Blend */}
-      <section className="py-20 px-6 lg:px-12">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Image with Premium Border */}
-          <div className="relative p-4 border border-slate-100 rounded-sm">
-            <div className="aspect-[16/10] overflow-hidden grayscale hover:grayscale-0 transition-all duration-1000">
-              <img 
-                src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80" 
-                alt="Workspace" 
-                className="w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-700"
-              />
-            </div>
-            <div className="absolute -bottom-4 -right-4 bg-[#0a0a0a] text-white p-6 hidden md:block">
-              <p className="text-[24px] font-serif italic">120K+</p>
-              <p className="text-[9px] tracking-widest uppercase opacity-50">Global Readers</p>
+              
+              <div className="flex gap-16 pt-8 border-t border-slate-100 w-fit">
+                  <div>
+                    <p className="text-3xl font-black text-slate-900 tracking-tighter uppercase">1.5K</p>
+                    <p className="text-[10px] tracking-[0.3em] uppercase text-orange-500 font-bold mt-1">Volumes</p>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-black text-slate-900 tracking-tighter uppercase">42</p>
+                    <p className="text-[10px] tracking-[0.3em] uppercase text-orange-500 font-bold mt-1">Thinkers</p>
+                  </div>
+                  <Fingerprint className="text-slate-100" size={50} />
+              </div>
             </div>
           </div>
+        </section>
 
-          <div className="space-y-8">
-            <h2 className="text-3xl font-serif italic leading-tight">Authenticity over Trends.</h2>
-            <p className="text-sm text-slate-500 leading-loose font-light">
-              We started with a simple belief: the world doesn't need more content; it needs more <span className="text-indigo-600 font-medium">context</span>. 
-              Every article, review, and opinion piece is carefully curated to provide insight and value to our readers.
-            </p>
-            <p className="text-sm text-slate-500 leading-loose font-light">
-              At B-Your Blog, writers are encouraged to explore topics deeply, whether it's technology, lifestyle, culture, or philosophy. 
-              Readers are not just consumers—they are part of a growing community of thoughtful individuals engaging in meaningful conversation.
-            </p>
-            <div className="flex gap-12 pt-4">
-               <div>
-                  <p className="text-xl font-bold tracking-tight text-slate-900">1.5K+</p>
-                  <p className="text-[9px] tracking-widest uppercase text-slate-400">Editions Published</p>
-               </div>
-               <div>
-                  <p className="text-xl font-bold tracking-tight text-slate-900">42</p>
-                  <p className="text-[9px] tracking-widest uppercase text-slate-400">Contributors Worldwide</p>
-               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. CORE VALUES */}
-      <section className="py-20 bg-white border-y border-slate-100 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100">
-          {[
-            { t: "Intellect", d: "We provide research-driven insights and original perspectives on a wide range of subjects." },
-            { t: "Design", d: "Every post is designed to be visually engaging, enhancing readability and experience." },
-            { t: "Community", d: "We foster discussions between readers and writers across diverse topics and cultures." }
-          ].map((item, i) => (
-            <div key={i} className="py-8 md:py-0 md:px-12 first:pl-0">
-              <span className="text-[10px] font-black text-indigo-600 tracking-widest">0{i+1}</span>
-              <h4 className="text-lg font-bold uppercase mt-4 mb-2 tracking-tight">{item.t}</h4>
-              <p className="text-[13px] text-slate-500 leading-relaxed font-light">{item.d}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 4. TEAM */}
-      <section className="py-10 px-6 lg:px-5 bg-[#fafafa]">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-10">
-            <h2 className="text-4xl font-serif italic mb-2">The Team Behind B-Your Blog</h2>
-            <p className="text-sm text-slate-500 leading-relaxed font-light max-w-xl">
-              Our team is composed of passionate writers, editors, and strategists dedicated to creating high-quality content and engaging experiences for our readers. Each member brings unique expertise to make B-Your Blog a trusted platform.
-            </p>
-            <div className="h-[1px] w-20 bg-indigo-600 mt-4" />
-          </div>
-
-          <div className="space-y-1">
+        {/* 3. CORE VALUES: Sharp Minimalist Grid */}
+        <section className="py-24 border-b border-slate-200">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {[
-              { n: "Siddharth B.", r: "Founder & Editor" },
-              { n: "Elena Rossi", r: "Creative Director" },
-              { n: "Marcus Thorne", r: "Strategy & Tech" },
-              { n: "Sarah Jenkins", r: "Content Lead" }
-            ].map((person, i) => (
-              <div 
-                key={i} 
-                className="group flex justify-between items-center py-6 border-b border-slate-200 hover:border-indigo-500 transition-all duration-500"
-              >
-                <div>
-                  <h3 className="text-xl md:text-xl font-serif italic text-slate-400 group-hover:text-slate-900 transition-colors">
-                    {person.n}
-                  </h3>
-                  <p className="text-[9px] font-black tracking-widest uppercase text-indigo-500/50 group-hover:text-indigo-500">
-                    {person.r}
-                  </p>
+              { t: "Intellect", d: "Research-driven insights on complex subjects that define our generation." },
+              { t: "Engineering", d: "Visual architecture designed to maximize clarity and focus." },
+              { t: "Legacy", d: "Content that remains relevant long after the trends have faded." }
+            ].map((item, i) => (
+              <div key={i} className="group relative pt-12">
+                <span className="absolute top-0 left-0 text-7xl font-black text-slate-50 group-hover:text-orange-100/50 transition-colors duration-500 select-none">
+                  0{i+1}
+                </span>
+                <div className="relative z-10">
+                  <h4 className="text-xs font-black uppercase tracking-[0.4em] mb-4 text-orange-600">{item.t}</h4>
+                  <p className="text-base text-slate-600 leading-relaxed font-medium">{item.d}</p>
+                  <div className="mt-6 h-[1px] w-12 bg-slate-900 group-hover:w-full transition-all duration-700" />
                 </div>
-                <ArrowUpRight size={18} className="opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all text-indigo-500" />
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
+        {/* 4. TEAM SECTION: The Bureau */}
+        <section className="py-24 mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+            <div className="lg:col-span-4">
+               <h2 className="text-5xl font-black text-slate-900 uppercase tracking-tighter">The <br /> Bureau.</h2>
+               <div className="h-1 w-12 bg-orange-500 mt-4" />
+               <p className="text-[11px] text-slate-400 mt-6 font-bold uppercase tracking-[0.3em]">Curators of Digital Culture.</p>
+            </div>
+            
+            <div className="lg:col-span-8 divide-y divide-slate-200">
+              {[
+                { n: "Siddharth B.", r: "FOUNDER & CHIEF EDITOR" },
+                { n: "Elena Rossi", r: "CREATIVE ARCHITECT" },
+                { n: "Marcus Thorne", r: "CULTURAL STRATEGIST" },
+                { n: "Sarah Jenkins", r: "HEAD OF NARRATIVE" }
+              ].map((person, i) => (
+                <motion.div 
+                  key={i} 
+                  whileHover={{ x: 15 }}
+                  className="group flex justify-between items-center py-8 cursor-pointer overflow-hidden"
+                >
+                  <div className="relative">
+                    <h3 className="text-3xl md:text-4xl font-serif italic text-slate-400 group-hover:text-slate-900 transition-all duration-300">
+                      {person.n}
+                    </h3>
+                    <p className="text-[10px] font-black tracking-[0.4em] uppercase text-orange-500 mt-2 opacity-0 group-hover:opacity-100 transition-all">
+                      {person.r}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="text-[10px] font-bold text-slate-300 group-hover:text-orange-500 transition-colors uppercase tracking-widest">Profile</span>
+                    <ArrowUpRight size={28} className="text-slate-200 group-hover:text-orange-500 group-hover:rotate-45 transition-all duration-500" />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+      </div>
     </div>
   );
 };

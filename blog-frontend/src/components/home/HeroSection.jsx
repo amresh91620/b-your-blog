@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MoveRight } from "lucide-react";
+import { MoveRight, Plus, ScrollText } from "lucide-react";
 
 const HeroSection = () => {
   const fadeInUp = {
@@ -9,162 +9,145 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative max-w-[1400px] mx-auto px-6 py-10 lg:py-20 overflow-hidden bg-white">
-      {/* 01. WATERMARK - Hidden on small mobile to avoid clutter */}
-      <div className="absolute top-10 left-10 text-[8rem] md:text-[12rem] font-bold text-slate-50 select-none pointer-events-none leading-none z-0">
-        01
+    <section className="relative max-w-[1400px] mx-auto px-6 py-16 lg:py-28 overflow-hidden bg-[#fafafa] selection:bg-orange-100">
+      
+      {/* 01. BACKGROUND DECOR - Subtle & Modern */}
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50/50 z-0" />
+      <div className="absolute top-10 left-10 text-[12rem] md:text-[20rem] font-black text-black/[0.02] select-none pointer-events-none leading-none z-0">
+        MXXV
       </div>
 
-      <div className="grid grid-cols-12 gap-4 relative z-10">
+      <div className="grid grid-cols-12 gap-8 relative z-10">
         
-        {/* LEFT: Sidebar - Hidden on mobile/tablet */}
-        <div className="hidden lg:flex col-span-1 flex-col justify-between py-4 border-r border-slate-100">
+        {/* LEFT: Sidebar - Minimalist */}
+        <div className="hidden lg:flex col-span-1 flex-col justify-between py-4">
+          <motion.div 
+            initial={{ height: 0 }}
+            animate={{ height: "100px" }}
+            className="w-[1px] bg-slate-300 mx-auto"
+          />
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-[9px] tracking-[0.5em] uppercase text-indigo-300 [writing-mode:vertical-lr] rotate-180 font-bold"
+            className="text-[9px] tracking-[0.6em] uppercase text-slate-400 [writing-mode:vertical-lr] rotate-180 font-medium py-8"
           >
-            Est. MMXXIV — Vol. 04
+            Philosophy — Art — Future
           </motion.p>
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-[1px] h-16 bg-indigo-100" />
-            <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-widest rotate-180 [writing-mode:vertical-lr]">
-              Scroll
-            </span>
+          <div className="flex flex-col items-center gap-6">
+             <ScrollText size={14} className="text-slate-300" />
           </div>
         </div>
 
         {/* CENTER: Main Content */}
-        <div className="col-span-12 lg:col-span-8 lg:pl-16 flex flex-col justify-center">
+        <div className="col-span-12 lg:col-span-7 lg:pl-10 flex flex-col justify-center">
           <motion.div
             variants={fadeInUp}
             initial="initial"
             animate="animate"
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <span className="text-[10px] font-black tracking-[0.3em] md:tracking-[0.5em] text-indigo-500 uppercase mb-4 block">
-              Digital Anthology
-            </span>
+            <div className="flex items-center gap-4 mb-8">
+              <span className="h-[1px] w-8 bg-orange-500" />
+              <span className="text-[10px] font-bold tracking-[0.5em] text-orange-600 uppercase">
+                Volume 04 / Issue 2026
+              </span>
+            </div>
 
-            <div className="relative mb-6 md:mb-8">
-              {/* THE SCRIPT */}
+            <div className="relative mb-12">
+              {/* Overlapping Text Effect */}
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="block text-4xl md:text-6xl font-serif italic text-slate-800 mb-[-1.5rem] ml-1 z-30 relative"
+              >
+                The Modern
+              </motion.span>
               <motion.h1
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.3 }}
-                className="text-6xl md:text-8xl lg:text-[9rem] font-serif italic text-indigo-600/90 leading-none absolute -top-8 md:-top-16 -left-1 z-30 drop-shadow-sm"
-                style={{ fontFamily: "Brush Script MT, cursive" }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="text-7xl md:text-9xl lg:text-[10rem] font-black tracking-tighter text-slate-900 leading-[0.8] uppercase"
               >
-                B-Your
-              </motion.h1>
-
-              {/* THE BOLD TEXT */}
-              <motion.h1
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
-                className="text-5xl md:text-7xl lg:text-[8.5rem] font-black tracking-tighter text-slate-900 leading-[0.8] uppercase relative z-20"
-              >
-                Journal
+                Journal<span className="text-orange-500">.</span>
               </motion.h1>
             </div>
 
-            {/* Content Box - Reduced width on mobile */}
-            <motion.div
-              variants={fadeInUp}
-              initial="initial"
-              animate="animate"
-              transition={{ delay: 0.5 }}
-              className="relative max-w-xl my-8 md:my-12 group"
-            >
-              <div className="absolute -left-4 md:-left-6 top-0 bottom-0 w-[2px] bg-gradient-to-b from-indigo-600 via-indigo-400 to-transparent group-hover:shadow-[0_0_15px_rgba(79,70,229,0.4)] transition-all duration-500" />
-
-              <div className="pl-6 md:pl-8 space-y-4">
-                <p className="text-base md:text-xl text-slate-800 font-serif leading-snug">
-                  Documenting the intersection of{" "}
-                  <span className="relative inline-block">
-                    <span className="relative z-10 font-bold italic">human creativity</span>
-                    <span className="absolute bottom-1 left-0 w-full h-1.5 md:h-2 bg-indigo-50 -z-0" />
-                  </span>{" "}
-                  and the digital frontier.
-                </p>
-
-                <p className="text-xs md:text-sm text-slate-500 font-light leading-relaxed tracking-wide hidden sm:block">
-                  Fresh perspectives delivered weekly. From insightful stories
-                  to trend analyses. Curated editorials designed to inspire.
-                </p>
-
-                {/* Stats Row */}
-                <div className="flex gap-4 md:gap-6 pt-2 items-center">
-                  <div className="flex flex-col">
-                    <span className="text-[8px] md:text-[10px] font-black uppercase tracking-tighter text-slate-400">Updates</span>
-                    <span className="text-[10px] md:text-xs font-bold text-slate-900">Weekly Ed.</span>
-                  </div>
-                  <div className="w-[1px] h-6 bg-slate-200" />
-                  <div className="flex flex-col">
-                    <span className="text-[8px] md:text-[10px] font-black uppercase tracking-tighter text-slate-400">Focus</span>
-                    <span className="text-[10px] md:text-xs font-bold text-slate-900">Digital Culture</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Button Row */}
             <motion.div
               variants={fadeInUp}
               initial="initial"
               animate="animate"
               transition={{ delay: 0.7 }}
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
+              className="max-w-xl space-y-8"
             >
-              <Link
-                to="/blogs"
-                className="w-full sm:w-auto text-center group relative px-8 md:px-10 py-4 bg-slate-900 text-white text-[10px] font-bold tracking-[0.3em] uppercase transition-all hover:bg-indigo-600 shadow-lg"
-              >
-                <span className="flex items-center justify-center gap-3">
-                  Explore <MoveRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-                </span>
-              </Link>
+              <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed">
+                Exploring the <span className="text-slate-900 font-medium italic">unseen narratives</span> of digital evolution and human craft.
+              </p>
 
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-[1px] bg-slate-200" />
-                <span className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                  Issue 2025
-                </span>
+              <div className="flex flex-wrap gap-12 py-6 border-y border-slate-200/60">
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase tracking-tighter text-slate-400 font-bold">Curator</p>
+                  <p className="text-sm font-medium text-slate-800 underline decoration-orange-200 underline-offset-4">Alex Rivers</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase tracking-tighter text-slate-400 font-bold">Reading Time</p>
+                  <p className="text-sm font-medium text-slate-800">12 Mins / Avg</p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8">
+                <Link
+                  to="/blogs"
+                  className="group relative px-8 py-4 bg-slate-900 text-white overflow-hidden transition-all duration-300 hover:pr-12"
+                >
+                  <span className="relative z-10 flex items-center gap-4 text-[11px] font-bold tracking-widest uppercase">
+                    Begin Reading <MoveRight className="w-4 h-4" />
+                  </span>
+                  <div className="absolute inset-0 bg-orange-600 translate-y-[101%] group-hover:translate-y-0 transition-transform duration-300" />
+                </Link>
+                
+                <button className="text-[11px] font-bold tracking-widest uppercase border-b-2 border-slate-200 hover:border-orange-500 transition-colors py-1">
+                  View Archive
+                </button>
               </div>
             </motion.div>
           </motion.div>
         </div>
 
-        {/* RIGHT: Image - Positioned under text on mobile */}
+        {/* RIGHT: Featured Image Section */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.4 }}
-          className="col-span-12 lg:col-span-3 relative mt-16 lg:mt-0"
+          className="col-span-12 lg:col-span-4 relative mt-16 lg:mt-0"
         >
-          <div className="relative group max-w-md mx-auto lg:max-w-none">
-            <div className="absolute -top-4 -right-4 w-full h-full border border-indigo-100 z-0 hidden lg:block" />
-
-            <div className="relative z-10 overflow-hidden rounded-sm shadow-2xl transition-transform duration-500 group-hover:-translate-y-2">
+          <div className="relative aspect-[4/5] w-full max-w-[400px] mx-auto group">
+            {/* Decorative Frame */}
+            <div className="absolute -inset-4 border border-slate-200 z-0 group-hover:inset-0 transition-all duration-500" />
+            
+            <div className="relative h-full w-full overflow-hidden bg-slate-200 z-10">
               <img
-                src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=800"
-                className="w-full h-[300px] md:h-[450px] lg:h-[500px] object-cover contrast-110"
-                alt="Journal Cover"
+                src="https://images.unsplash.com/photo-1516414447565-b14be0adf13e?auto=format&fit=crop&q=80&w=1000"
+                className="w-full h-full object-cover mix-blend-multiply opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-1000"
+                alt="Journal Aesthetic"
               />
-              <div className="absolute inset-0 bg-indigo-600/5 group-hover:bg-transparent transition-colors duration-500" />
+              
+              {/* Image Overlay Label */}
+              <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-md p-3 py-1">
+                 <p className="text-[9px] font-black tracking-widest uppercase text-slate-900">Cover Story</p>
+              </div>
             </div>
 
-            {/* Float Card */}
+            {/* Float Badge */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.2 }}
-              className="absolute -bottom-6 right-2 lg:-bottom-10 lg:-left-12 bg-white p-4 md:p-5 shadow-2xl border border-slate-50 max-w-[140px] md:max-w-[180px] z-20"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -bottom-8 -left-8 bg-orange-500 text-white p-6 shadow-2xl z-20 hidden md:block"
             >
-              <div className="w-8 h-1 bg-indigo-500 mb-3" />
-              <p className="text-[9px] md:text-[10px] font-black text-slate-900 uppercase leading-tight">
-                AI & The Future of Blogs
+              <Plus className="mb-4 text-orange-200" />
+              <p className="text-xs font-bold leading-tight uppercase tracking-tighter">
+                New Perspectives<br/>On Generative Art
               </p>
             </motion.div>
           </div>

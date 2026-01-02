@@ -9,7 +9,7 @@ const App = () => {
       <Navbar />
       <AppRoutes />
       <Footer/>
-      <Toaster position="top-right" />
+      <Toaster position="top-right" /> 
     </>
   );
 };
