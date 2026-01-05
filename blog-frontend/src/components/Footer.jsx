@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Minus, Copyright } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -8,115 +8,80 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-slate-900 text-white py-20 px-6 lg:px-12 border-t border-slate-800 relative overflow-hidden">
-      {/* Background Watermark */}
-      <div className="absolute top-0 right-0 text-[15rem] font-black text-white/[0.02] leading-none pointer-events-none select-none">
-        B.Y
-      </div>
-
-      <div className="max-w-7xl mx-auto relative z-10">
+    <footer className="bg-[#0A0A0A] text-[#FFFFFF] py-14 px-6 lg:px-12 border-t-2 border-[#FFFFFF]/10">
+      <div className="max-w-[1400px] mx-auto">
         
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 pb-16 border-b border-slate-800/50">
-          
-          {/* Left Side: Brand & Description */}
-          <div className="lg:col-span-7 space-y-8">
-            <div className="space-y-4">
-              <Link to="/" className="flex items-center gap-1 group w-fit">
-                <span className="text-3xl font-black tracking-tighter text-white uppercase group-hover:text-orange-500 transition-colors">
-                  B-YOUR
-                </span>
-                <span className="text-3xl font-serif italic text-orange-500 group-hover:text-white transition-colors">.</span>
-              </Link>
-              <div className="flex items-center gap-3 text-orange-500">
-                <Minus size={20} strokeWidth={4} />
-                <p className="text-[10px] font-black uppercase tracking-[0.5em]">
-                  The Digital Anthology
-                </p>
-              </div>
-            </div>
-            
-            <p className="max-w-lg text-lg text-slate-400 leading-relaxed font-light italic font-serif">
-              "Curating the space where <span className="text-white">human artistry</span> meets <span className="text-white">machine intelligence</span>. Each word is chosen with purpose, each story told with intent."
+        {/* ROW 1: BRAND & NAV - Sharper & Thicker */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center pb-12 border-b border-[#FFFFFF]/20 gap-8">
+          <div className="group">
+            <Link to="/" className="text-5xl font-serif italic tracking-tighter text-[#FFFFFF] hover:text-[#4ade80] transition-all duration-500 block">
+              B-Your.
+            </Link>
+            <p className="text-[11px] font-black uppercase tracking-[0.4em] text-[#4ade80] mt-3">
+              The Digital Anthology — 2026
             </p>
+          </div>
 
-            <div className="flex gap-10 pt-4">
-              <div>
-                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-2">Editor-In-Chief</p>
-                <p className="text-xs font-bold uppercase tracking-wider text-white">Siddharth B.</p>
-              </div>
-              <div>
-                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-2">Location</p>
-                <p className="text-xs font-bold uppercase tracking-wider text-white">Ahmedabad, IN</p>
-              </div>
+          <nav className="flex gap-x-10 gap-y-4 flex-wrap">
+            {['Archive', 'Disciplines', 'About', 'Contact'].map((item) => (
+              <Link 
+                key={item} 
+                to={`/${item.toLowerCase()}`} 
+                className="text-[13px] font-black uppercase tracking-widest text-[#FFFFFF] hover:text-[#4ade80] transition-all border-b-2 border-transparent hover:border-[#4ade80] pb-1"
+              >
+                {item}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        {/* ROW 2: INFO GRID - Bold Text */}
+        <div className="grid grid-cols-1 md:grid-cols-4 py-12 gap-12">
+          <div className="md:col-span-2 space-y-5">
+            <span className="text-[11px] font-black text-[#4ade80] uppercase tracking-[0.3em]">The Vision</span>
+            <p className="text-xl font-serif italic text-[#FFFFFF] leading-relaxed max-w-md">
+              "Curating the space where human artistry meets machine intelligence with absolute intent."
+            </p>
+          </div>
+
+          <div className="space-y-5">
+            <span className="text-[11px] font-black text-[#4ade80] uppercase tracking-[0.3em]">Connect</span>
+            <div className="flex flex-col gap-3">
+              {['Instagram', 'LinkedIn', 'Medium'].map((social) => (
+                <a key={social} href="#" className="text-[14px] font-bold text-[#FFFFFF]/80 hover:text-[#FFFFFF] transition-all w-fit">
+                  {social} — ↗
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Right Side: Navigation & Socials */}
-          <div className="lg:col-span-5 grid grid-cols-2 gap-12">
-            <div className="space-y-6">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 border-b border-orange-500/20 pb-2">Menu</h4>
-              <nav className="flex flex-col gap-4">
-                {['Archive', 'About Us', 'Contact', 'Membership'].map((item) => (
-                  <Link 
-                    key={item} 
-                    to={`/${item.toLowerCase().replace(" ", "")}`} 
-                    className="text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-orange-500 hover:translate-x-2 transition-all duration-300 w-fit"
-                  >
-                    {item}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-
-            <div className="space-y-6">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-500 border-b border-orange-500/20 pb-2">Social</h4>
-              <div className="flex flex-col gap-4">
-                {['Instagram', 'Twitter', 'LinkedIn', 'Medium'].map((social) => (
-                  <a 
-                    key={social} 
-                    href="#" 
-                    className="group flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-all duration-300"
-                  >
-                    {social}
-                    <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all text-orange-500" />
-                  </a>
-                ))}
-              </div>
+          <div className="space-y-5 md:text-right">
+            <span className="text-[11px] font-black text-[#4ade80] uppercase tracking-[0.3em]">Legal</span>
+            <div className="flex flex-col gap-3 md:items-end">
+              <span className="text-[13px] font-bold text-[#FFFFFF]/80 cursor-pointer hover:text-[#FFFFFF]">Privacy Policy</span>
+              <span className="text-[13px] font-bold text-[#FFFFFF]/80 cursor-pointer hover:text-[#FFFFFF]">Terms of Service</span>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-10 flex flex-col md:grid md:grid-cols-3 items-center gap-8">
-          
-          <div className="flex items-center gap-2 text-slate-500 order-2 md:order-1">
-            <Copyright size={12} />
-            <p className="text-[9px] font-black tracking-[0.2em] uppercase">
-              2026 <span className="text-slate-700 mx-2">|</span> All Rights Reserved
-            </p>
-          </div>
+        {/* ROW 3: BOTTOM BAR - High Visibility */}
+        <div className="pt-10 border-t border-[#FFFFFF]/10 flex flex-col md:flex-row justify-between items-center gap-8">
+          <p className="text-[11px] font-black text-[#FFFFFF] uppercase tracking-[0.2em]">
+            © 2026 B-YOUR. <span className="text-[#4ade80]">Ahmedabad, IN.</span>
+          </p>
 
+          {/* Bold Scroll Top Button */}
           <button 
             onClick={scrollToTop}
-            className="group flex flex-col items-center gap-3 order-1 md:order-2"
+            className="flex items-center gap-4 group px-8 py-3 bg-[#FFFFFF] text-[#0A0A0A] rounded-none hover:bg-[#4ade80] transition-all duration-500"
           >
-            <div className="relative">
-               <span className="text-[9px] font-black tracking-[0.5em] uppercase text-orange-500 group-hover:text-white transition-colors">
-                Scroll to Zenith
-              </span>
-            </div>
-            <div className="h-10 w-[1px] bg-slate-700 group-hover:bg-orange-500 group-hover:h-14 transition-all duration-700" />
+            <span className="text-[11px] font-black uppercase tracking-[0.2em]">Back to Zenith</span>
+            <ArrowUp size={16} strokeWidth={3} className="group-hover:-translate-y-1 transition-transform" />
           </button>
 
-          <div className="text-center md:text-right order-3">
-            <p className="text-[9px] font-black tracking-[0.2em] uppercase text-slate-500">
-              Coded with purpose by <br className="md:hidden" />
-              <span className="text-white hover:text-orange-500 transition-colors cursor-pointer decoration-orange-500/30 underline underline-offset-4">
-                Siddharth B.
-              </span>
-            </p>
-          </div>
+          <p className="text-[11px] font-black text-[#FFFFFF] uppercase tracking-[0.2em]">
+            Handcrafted by <span className="underline decoration-[#4ade80] decoration-2 underline-offset-4">Siddharth B.</span>
+          </p>
         </div>
       </div>
     </footer>

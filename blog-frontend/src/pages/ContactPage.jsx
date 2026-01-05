@@ -1,155 +1,145 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Minus, Mail, Instagram, Send, MapPin } from 'lucide-react';
+import { ArrowUpRight, Minus, Mail, Instagram, Send, MapPin, Feather } from 'lucide-react';
 
 const ContactPage = () => {
   return (
-    <div className="bg-[#fafafa] text-slate-900 selection:bg-orange-500 selection:text-white min-h-screen font-sans">
+    <div className="bg-[#FAF9F6] text-[#1a1a1a] selection:bg-[#2d4a43] selection:text-white min-h-screen font-sans">
       
-      {/* Global Container */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      {/* Container - Reduced max-width for tighter look */}
+      <div className="max-w-6xl mx-auto px-6 lg:px-10">
         
-        {/* 1. HERO SECTION: Editorial Impact */}
-        <section className="pt-32 pb-20 border-b border-slate-200">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            <div className="lg:col-span-8">
+        {/* 1. HERO: Tighter Spacing & Green Theme */}
+        <section className="pt-28 pb-12 border-b border-black/5">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+            <div className="lg:col-span-7">
               <motion.div 
                 initial={{ opacity: 0, x: -10 }} 
                 animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-3 mb-8 text-orange-600"
+                className="flex items-center gap-2 mb-4 text-[#2d4a43]"
               >
-                <Minus size={24} strokeWidth={4} />
-                <span className="text-[11px] font-black tracking-[0.5em] uppercase">Contact Bureau</span>
+                <Minus size={20} strokeWidth={3} />
+                <span className="text-[10px] font-black tracking-[0.4em] uppercase">Contact Bureau</span>
               </motion.div>
               <motion.h1 
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-6xl md:text-9xl font-black leading-[0.85] tracking-tighter text-slate-900 uppercase"
+                className="text-6xl md:text-8xl font-serif leading-[0.9] tracking-tighter text-[#1a1a1a]"
               >
                 Start a <br /> 
-                <span className="font-serif italic font-light lowercase text-orange-500">Dialogue.</span>
+                <span className="italic font-light text-[#2d4a43]">Dialogue.</span>
               </motion.h1>
             </div>
             
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="lg:col-span-4 lg:pt-24"
+              transition={{ delay: 0.3 }}
+              className="lg:col-span-5 pb-2"
             >
-              <p className="text-base md:text-lg text-slate-500 leading-relaxed font-medium border-l-2 border-orange-500 pl-8 uppercase tracking-wider">
-                Our editorial team is ready to listen. Whether it's a submission or a strategic inquiry, we value the human connection.
+              <p className="text-sm md:text-base text-slate-500 leading-relaxed font-medium border-l border-[#2d4a43] pl-6 uppercase tracking-wider">
+                Whether it's a submission or a strategic inquiry, we value the human connection.
               </p>
             </motion.div>
           </div>
         </section>
 
-        {/* 2. MAIN CONTENT: High Contrast Form & Info */}
-        <section className="py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+        {/* 2. MAIN CONTENT: Tighter Grid & Professional Inputs */}
+        <section className="py-12 md:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
             
-            {/* Left Column: Line-Style Form */}
+            {/* Left: Form */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="lg:col-span-7"
             >
-              <div className="mb-16 flex items-center gap-4">
-                <Send className="text-orange-500" size={20} />
+              <div className="mb-10 flex items-center gap-4">
+                <div className="p-3 bg-[#2d4a43]/5 rounded-full text-[#2d4a43]">
+                  <Feather size={18} />
+                </div>
                 <div>
-                    <h3 className="text-[11px] font-black tracking-[0.4em] uppercase text-slate-400">Electronic Mail</h3>
-                    <p className="text-2xl font-serif italic text-slate-900">Send us a digital transmission</p>
+                    <h3 className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400 leading-none mb-1">Electronic Mail</h3>
+                    <p className="text-xl font-serif italic text-[#1a1a1a]">Send a digital transmission</p>
                 </div>
               </div>
 
-              <form className="space-y-16" onSubmit={(e) => e.preventDefault()}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+              <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                   <div className="group">
-                    <label className="block text-[10px] font-black tracking-[0.3em] uppercase text-slate-400 mb-2 group-focus-within:text-orange-500 transition-colors">Nominal Name</label>
-                    <input type="text" className="w-full bg-transparent border-b-2 border-slate-100 py-4 outline-none focus:border-orange-500 transition-all font-medium text-xl text-slate-900 placeholder:text-slate-200" placeholder="Alex Rivers" />
+                    <label className="block text-[9px] font-black tracking-[0.2em] uppercase text-slate-400 mb-1 group-focus-within:text-[#2d4a43]">Name</label>
+                    <input type="text" className="w-full bg-transparent border-b border-black/10 py-3 outline-none focus:border-[#2d4a43] transition-all font-serif text-lg text-[#1a1a1a] placeholder:text-slate-300" placeholder="Alex Rivers" />
                   </div>
                   <div className="group">
-                    <label className="block text-[10px] font-black tracking-[0.3em] uppercase text-slate-400 mb-2 group-focus-within:text-orange-500 transition-colors">Registry Email</label>
-                    <input type="email" className="w-full bg-transparent border-b-2 border-slate-100 py-4 outline-none focus:border-orange-500 transition-all font-medium text-xl text-slate-900 placeholder:text-slate-200" placeholder="hello@studio.com" />
+                    <label className="block text-[9px] font-black tracking-[0.2em] uppercase text-slate-400 mb-1 group-focus-within:text-[#2d4a43]">Email</label>
+                    <input type="email" className="w-full bg-transparent border-b border-black/10 py-3 outline-none focus:border-[#2d4a43] transition-all font-serif text-lg text-[#1a1a1a] placeholder:text-slate-300" placeholder="hello@studio.com" />
                   </div>
                 </div>
 
                 <div className="group">
-                  <label className="block text-[10px] font-black tracking-[0.3em] uppercase text-slate-400 mb-2 group-focus-within:text-orange-500 transition-colors">Subject of Inquiry</label>
-                  <select className="w-full bg-transparent border-b-2 border-slate-100 py-4 outline-none focus:border-orange-500 transition-all font-serif italic text-xl text-slate-900 appearance-none cursor-pointer">
+                  <label className="block text-[9px] font-black tracking-[0.2em] uppercase text-slate-400 mb-1 group-focus-within:text-[#2d4a43]">Subject</label>
+                  <select className="w-full bg-transparent border-b border-black/10 py-3 outline-none focus:border-[#2d4a43] transition-all font-serif italic text-lg text-[#1a1a1a] appearance-none cursor-pointer">
                     <option>General Transmission</option>
                     <option>Editorial Submission</option>
                     <option>Partnership Proposal</option>
-                    <option>Bug Report</option>
                   </select>
                 </div>
 
                 <div className="group">
-                  <label className="block text-[10px] font-black tracking-[0.3em] uppercase text-slate-400 mb-2 group-focus-within:text-orange-500 transition-colors">Message Context</label>
-                  <textarea rows="4" className="w-full bg-transparent border-b-2 border-slate-100 py-4 outline-none focus:border-orange-500 transition-all font-medium text-xl text-slate-900 resize-none placeholder:text-slate-200" placeholder="Write your narrative here..."></textarea>
+                  <label className="block text-[9px] font-black tracking-[0.2em] uppercase text-slate-400 mb-1 group-focus-within:text-[#2d4a43]">Message</label>
+                  <textarea rows="3" className="w-full bg-transparent border-b border-black/10 py-3 outline-none focus:border-[#2d4a43] transition-all font-serif text-lg text-[#1a1a1a] resize-none placeholder:text-slate-300" placeholder="Write your narrative..."></textarea>
                 </div>
 
-                {/* Themed Button */}
-                <button className="relative overflow-hidden group bg-slate-900 text-white px-12 py-7 flex items-center gap-6 shadow-2xl active:scale-95 transition-all">
-                  <span className="relative z-10 text-[11px] font-black tracking-[0.4em] uppercase">Initialize Transmission</span>
-                  <ArrowUpRight size={18} className="relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-orange-500" />
-                  <div className="absolute inset-0 bg-orange-600 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                <button className="relative overflow-hidden group bg-[#1a1a1a] text-white px-10 py-5 flex items-center gap-4 rounded-sm active:scale-95 transition-all shadow-xl shadow-black/10">
+                  <span className="relative z-10 text-[10px] font-black tracking-[0.3em] uppercase">Initialize Send</span>
+                  <Send size={14} className="relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-[#2d4a43]" />
+                  <div className="absolute inset-0 bg-[#2d4a43] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                 </button>
               </form>
             </motion.div>
 
-            {/* Right Column: Bold Info Blocks */}
-            <div className="lg:col-span-5 space-y-16 lg:border-l lg:border-slate-100 lg:pl-16">
+            {/* Right: Info Blocks */}
+            <div className="lg:col-span-5 space-y-10 lg:border-l lg:border-black/5 lg:pl-16">
               
-              <div className="space-y-8">
-                <h3 className="text-[11px] font-black tracking-[0.4em] uppercase text-slate-400">Direct Access</h3>
+              <div className="space-y-6">
+                <h3 className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400">Direct Access</h3>
                 
-                <a href="mailto:hello@b-yourblog.com" className="flex items-center justify-between p-8 bg-white border border-slate-100 group hover:border-orange-500 transition-all shadow-sm hover:shadow-xl hover:-translate-y-1">
+                <a href="mailto:hello@b-yourblog.com" className="flex items-center justify-between p-6 bg-white border border-black/5 group hover:border-[#2d4a43] transition-all shadow-sm">
                    <div>
-                      <p className="text-[9px] font-black tracking-[0.2em] text-orange-500 uppercase mb-1">Send Mail</p>
-                      <p className="font-serif text-xl italic text-slate-900">hello@b-your.com</p>
+                      <p className="text-[8px] font-black tracking-widest text-[#2d4a43] uppercase mb-1">Email</p>
+                      <p className="font-serif text-lg italic text-[#1a1a1a]">hello@b-your.com</p>
                    </div>
-                   <Mail size={24} className="text-slate-200 group-hover:text-orange-500 transition-colors" />
+                   <Mail size={20} className="text-slate-300 group-hover:text-[#2d4a43] transition-colors" />
                 </a>
 
-                <a href="#" className="flex items-center justify-between p-8 bg-white border border-slate-100 group hover:border-orange-500 transition-all shadow-sm hover:shadow-xl hover:-translate-y-1">
+                <a href="#" className="flex items-center justify-between p-6 bg-white border border-black/5 group hover:border-[#2d4a43] transition-all shadow-sm">
                    <div>
-                      <p className="text-[9px] font-black tracking-[0.2em] text-orange-500 uppercase mb-1">Instagram Portfolio</p>
-                      <p className="font-serif text-xl italic text-slate-900">@byour_journal</p>
+                      <p className="text-[8px] font-black tracking-widest text-[#2d4a43] uppercase mb-1">Social</p>
+                      <p className="font-serif text-lg italic text-[#1a1a1a]">@byour_journal</p>
                    </div>
-                   <Instagram size={24} className="text-slate-200 group-hover:text-orange-500 transition-colors" />
+                   <Instagram size={20} className="text-slate-300 group-hover:text-[#2d4a43] transition-colors" />
                 </a>
               </div>
 
-              {/* Physical Locations */}
-              <div className="pt-12 border-t border-slate-100 space-y-10">
+              <div className="pt-8 border-t border-black/5 space-y-6">
                 <div className="flex items-center gap-3">
-                    <MapPin size={16} className="text-orange-500" />
-                    <h3 className="text-[11px] font-black tracking-[0.4em] uppercase text-slate-400">Bureaus</h3>
+                    <MapPin size={14} className="text-[#2d4a43]" />
+                    <h3 className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400">Location</h3>
                 </div>
                 
-                <div className="grid grid-cols-1 gap-12">
-                  <div className="group">
-                    <h4 className="text-[11px] font-black uppercase mb-3 text-slate-900 tracking-widest">HQ — New Delhi</h4>
-                    <p className="text-lg text-slate-500 font-serif italic leading-relaxed group-hover:text-slate-900 transition-colors">
-                      124 Creative Plaza, South Ext.<br />
-                      DLF Phase II, 110001
-                    </p>
-                  </div>
-                  <div className="group">
-                    <h4 className="text-[11px] font-black uppercase mb-3 text-slate-900 tracking-widest">Digital Archive</h4>
-                    <p className="text-lg text-slate-500 font-serif italic group-hover:text-slate-900 transition-colors">
-                      Always Operating / Cloud Based<br />
-                      Response Time: &lt; 24 Hours
-                    </p>
-                  </div>
+                <div className="group">
+                  <h4 className="text-[10px] font-black uppercase mb-2 text-[#1a1a1a] tracking-widest">HQ — New Delhi</h4>
+                  <p className="text-base text-slate-500 font-serif italic leading-snug group-hover:text-[#1a1a1a] transition-colors">
+                    124 Creative Plaza, South Ext.<br />
+                    DLF Phase II, 110001
+                  </p>
                 </div>
               </div>
 
-              {/* Watermark for Right Column */}
-              <div className="pt-10 opacity-[0.03] pointer-events-none select-none">
-                 <h2 className="text-9xl font-black uppercase leading-none tracking-tighter">Talk</h2>
+              {/* Minimal Watermark */}
+              <div className="pt-6 opacity-[0.03] pointer-events-none select-none hidden lg:block">
+                 <h2 className="text-8xl font-black uppercase leading-none tracking-tighter">Talk</h2>
               </div>
             </div>
 

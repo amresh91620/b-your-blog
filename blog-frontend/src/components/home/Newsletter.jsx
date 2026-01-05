@@ -1,110 +1,93 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Send, Minus, ShieldCheck } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
 
 const Newsletter = () => {
   return (
-    <section className="relative py-32 bg-white border-t border-slate-100 overflow-hidden">
-      {/* Structural Watermark: High Impact Background Text */}
-      <div className="absolute -bottom-12 -left-12 text-[18rem] font-black text-slate-50 select-none pointer-events-none leading-none z-0 tracking-tighter">
-        JOIN
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
+    <section className="bg-[#FDFCF8] py-24 border-t border-[#1A1A1A]/10 overflow-hidden">
+      <div className="max-w-[1400px] mx-auto px-6">
+        
+        <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
-          {/* Left Side: Headline & Intent */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+          {/* LEFT: Elegant Typography */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-7 space-y-10"
+            className="lg:col-span-6 space-y-8"
           >
-            <div className="flex items-center gap-4 text-orange-600">
-              <Minus size={28} strokeWidth={4} />
-              <span className="text-[11px] font-black tracking-[0.6em] uppercase">
-                The Weekly Dispatch
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-[1px] bg-[#2D4A43]" />
+              <span className="text-[10px] font-bold tracking-[0.5em] uppercase text-[#2D4A43]">
+                Correspondence
               </span>
             </div>
 
-            <h2 className="text-7xl md:text-9xl font-black text-slate-900 leading-[0.8] tracking-tighter uppercase">
-              Stay <br /> 
-              <span className="font-serif italic font-light lowercase text-orange-500">Informed.</span>
+            <h2 className="text-5xl md:text-7xl font-serif text-[#1A1A1A] leading-[1.1] tracking-tighter">
+              A weekly journal <br />
+              <span className="italic font-light text-[#2D4A43]">for the refined.</span>
             </h2>
 
-            <div className="space-y-6">
-                <p className="max-w-lg text-slate-500 text-lg md:text-xl font-medium leading-relaxed border-l-2 border-orange-500 pl-8">
-                  Join <span className="text-slate-900 font-bold">12,000+ thinkers</span> receiving high-context stories on the intersection of 
-                  <span className="text-slate-900 italic font-serif"> human creativity </span> 
-                  and <span className="text-slate-900 italic font-serif"> industrial evolution</span>.
-                </p>
-                <div className="flex items-center gap-2 text-slate-400">
-                    <ShieldCheck size={14} className="text-orange-500" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">Zero Spam • Editorial Quality • Weekly Pulse</span>
-                </div>
-            </div>
-          </motion.div>
-
-          {/* Right Side: Dark Minimalist Input Desk */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="lg:col-span-5"
-          >
-            <div className="bg-slate-900 p-10 md:p-14 shadow-[40px_40px_80px_rgba(0,0,0,0.15)] relative">
-              {/* Top Accent Icon */}
-              <div className="absolute top-0 right-10 w-14 h-14 bg-orange-500 flex items-center justify-center text-white shadow-xl -translate-y-1/2">
-                <Send size={20} strokeWidth={3} className="rotate-12" />
-              </div>
-
-              <label className="text-[10px] font-black text-orange-500 uppercase tracking-[0.4em] mb-12 block">
-                Subscription Terminal / Vol. 2026
-              </label>
-
-              <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
-                <div className="relative group">
-                  <input
-                    type="email"
-                    required
-                    placeholder="ENTER EMAIL ADDRESS"
-                    className="w-full bg-transparent border-b border-slate-700 py-6 outline-none text-xs font-black tracking-[0.3em] text-white placeholder:text-slate-600 focus:border-orange-500 transition-all duration-700 uppercase"
-                  />
-                  <div className="absolute bottom-0 left-0 h-[1px] bg-orange-500 w-0 group-focus-within:w-full transition-all duration-700" />
-                </div>
-
-                <button className="w-full group relative overflow-hidden bg-white py-6 text-[11px] font-black tracking-[0.5em] uppercase text-slate-900 transition-all">
-                  <span className="relative z-10 group-hover:text-white transition-colors duration-500">
-                    Join the Collective
-                  </span>
-                  <div className="absolute inset-0 bg-orange-600 -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-out" />
-                </button>
-              </form>
-
-              {/* Social Proof: Clean & Grayscale */}
-              <div className="mt-12 pt-10 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-6">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-10 h-10 border-2 border-slate-900 rounded-none overflow-hidden grayscale hover:grayscale-0 transition-all duration-500 cursor-crosshair">
-                      <img src={`https://i.pravatar.cc/100?img=${i + 15}`} alt="reader" />
-                    </div>
-                  ))}
-                </div>
-                <div className="text-center sm:text-right">
-                    <p className="text-[10px] font-black text-white uppercase tracking-widest">
-                      12.4K Subscribed
-                    </p>
-                    <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1">
-                      Trusted Global Reach
-                    </p>
-                </div>
-              </div>
-            </div>
-
-            <p className="mt-8 text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em] text-center">
-              Protocol: No algorithms. No clutter. Just <span className="text-orange-600 underline underline-offset-4 decoration-1">pure narrative</span>.
+            <p className="max-w-md text-[#1A1A1A]/60 text-lg font-serif italic leading-relaxed">
+              "Join 12,000 readers who value context over clutter. No noise, just hand-crafted perspectives delivered to your terminal."
             </p>
           </motion.div>
+
+          {/* RIGHT: Sophisticated Input Form */}
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-6"
+          >
+            <div className="bg-[#1A1A1A] p-10 md:p-16 relative shadow-2xl">
+              {/* Corner Accent */}
+              <div className="absolute top-0 right-0 p-6">
+                <Mail className="text-[#FDFCF8]/20" size={40} strokeWidth={1} />
+              </div>
+
+              <div className="space-y-12">
+                <div className="space-y-2">
+                  <h4 className="text-[10px] font-bold text-[#FDFCF8]/40 uppercase tracking-[0.4em]">
+                    Membership Entry
+                  </h4>
+                  <div className="h-[1px] w-12 bg-[#2D4A43]" />
+                </div>
+
+                <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
+                  <div className="relative group">
+                    <input
+                      type="email"
+                      required
+                      placeholder="EMAIL ADDRESS"
+                      className="w-full bg-transparent border-b border-[#FDFCF8]/20 py-4 outline-none text-[11px] font-bold tracking-[0.3em] text-[#FDFCF8] placeholder:text-[#FDFCF8]/20 focus:border-[#FDFCF8] transition-all duration-500 uppercase"
+                    />
+                  </div>
+
+                  <button className="group flex items-center justify-between w-full border border-[#FDFCF8]/30 px-8 py-5 hover:bg-[#FDFCF8] hover:text-[#1A1A1A] transition-all duration-700">
+                    <span className="text-[10px] font-black uppercase tracking-[0.5em]">
+                      Request Access
+                    </span>
+                    <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform duration-500" />
+                  </button>
+                </form>
+
+                <div className="flex items-center justify-between pt-8 border-t border-[#FDFCF8]/10">
+                  <div className="flex -space-x-2">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="w-8 h-8 border border-[#1A1A1A] bg-[#FDFCF8]/10 rounded-full overflow-hidden">
+                        <img src={`https://i.pravatar.cc/100?img=${i + 20}`} alt="user" className="grayscale" />
+                      </div>
+                    ))}
+                  </div>
+                  <span className="text-[9px] font-bold text-[#FDFCF8]/40 uppercase tracking-widest italic font-serif">
+                    Private Community — 12.4K
+                  </span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
         </div>
       </div>
     </section>
