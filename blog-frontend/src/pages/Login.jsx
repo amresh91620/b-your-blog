@@ -1,146 +1,169 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, Mail, Lock, ShieldCheck, Fingerprint, Feather } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react'; // Eye icons add kiye
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+
+import { loginThunk } from "../features/auth/authThunk";
 
 const Login = () => {
-  // Animation Variants
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { loading } = useSelector((state) => state.auth);
+
+  const [showPassword, setShowPassword] = useState(false); // Password visibility state
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    rememberMe: false,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const res = await dispatch(loginThunk(formData));
+
+    if (res.type.includes("fulfilled")) {
+      toast.success("Login successful");
+      navigate("/");
+    } else {
+      toast.error(res.payload || "Login failed");
+    }
+  };
+
+  /* Animations */
   const containerVars = {
-    initial: { opacity: 0, y: 10 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
 
   const itemVars = {
-    initial: { opacity: 0, y: 10 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+    initial: { opacity: 0, x: -10 },
+    animate: { opacity: 1, x: 0 }
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] flex items-center mt-15 justify-center selection:bg-[#2d4a43] selection:text-white p-4">
+    <div className="min-h-screen bg-[#fafafa]  flex items-center justify-center p-6 font-sans text-slate-900">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 via-teal-500 to-sky-600" />
       
-      <motion.div 
+      <motion.div
         variants={containerVars}
         initial="initial"
         animate="animate"
-        className="flex w-full max-w-5xl bg-white shadow-[0_30px_80px_-20px_rgba(0,0,0,0.08)] overflow-hidden rounded-sm border border-black/5"
+        className="w-full max-w-[440px] bg-white p-10 md:p-12 rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100"
       >
-        
-        {/* LEFT SIDE: Editorial Branding */}
-        <div className="hidden lg:flex w-1/2 bg-[#2d4a43] p-16 flex-col justify-between relative overflow-hidden text-white">
-          {/* Subtle Texture Overlay */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
+        <header className="mb-10">
+          <h1 className="text-3xl font-serif font-medium tracking-tight text-slate-900">
+            Welcome back
+          </h1>
+          <p className="mt-2 text-slate-500 text-sm">
+            Enter your credentials to access your library.
+          </p>
+        </header>
+
+        <form className="space-y-5" onSubmit={handleSubmit}>
           
-          <Link to="/" className="z-10 group">
-            <span className="text-xl font-serif tracking-tighter text-white">
-              B-YOUR <span className="italic font-light opacity-80">Journal.</span>
-            </span>
-          </Link>
+          {/* EMAIL */}
+          <motion.div variants={itemVars} className="space-y-1.5">
+            <label className="text-[13px] font-medium text-slate-700 ml-1">
+              Email Address
+            </label>
+            <div className="group relative flex items-center transition-all duration-300">
+              <Mail size={18} className="absolute left-4 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="name@example.com"
+                className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-transparent rounded-2xl outline-none focus:bg-white focus:border-teal-500/30 focus:ring-4 focus:ring-teal-500/5 transition-all text-sm"
+                required
+              />
+            </div>
+          </motion.div>
 
-          <div className="z-10 space-y-8">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-            >
-              <h2 className="text-7xl font-serif italic leading-[0.85] text-white">
-                The <br /> Archive<span className="text-[#FAF9F6]/30">.</span>
-              </h2>
-              <div className="h-[1px] w-16 bg-white/30 mt-8" />
-            </motion.div>
-            <p className="text-[#FAF9F6]/60 text-[10px] leading-relaxed max-w-xs uppercase tracking-[0.4em] font-bold">
-              Access your curated workspace and managed editorial content.
-            </p>
-          </div>
-
-          <div className="z-10 flex justify-between items-center text-[9px] text-white/40 font-bold uppercase tracking-[0.3em]">
-            <span className="flex items-center gap-2">
-              <ShieldCheck size={12} /> SECURED NODE
-            </span>
-            <span>Est. 2024</span>
-          </div>
-
-          {/* Large Background Watermark */}
-          <div className="absolute -bottom-10 -left-10 text-[20vw] font-black text-white/[0.03] leading-none pointer-events-none uppercase tracking-tighter select-none">
-            LOG
-          </div>
-        </div>
-
-        {/* RIGHT SIDE: Form */}
-        <div className="flex-1 flex flex-col justify-center px-8 md:px-16 lg:px-20 py-16 relative bg-white">
-          
-          <div className="max-w-sm w-full mx-auto space-y-10">
-            <header className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-[#2d4a43]/5 rounded-full text-[#2d4a43]">
-                  <Fingerprint size={20} />
-                </div>
-                <span className="text-[10px] font-black tracking-[0.4em] text-slate-400 uppercase">Identity Bureau</span>
-              </div>
-              <h3 className="text-5xl font-serif text-[#1a1a1a] tracking-tight">Login.</h3>
-              <p className="text-slate-400 text-[11px] font-bold uppercase tracking-widest">Identify yourself to continue</p>
-            </header>
-
-            <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
-              <div className="space-y-8">
-                
-                {/* Email Field */}
-                <motion.div variants={itemVars} className="group space-y-2">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1 group-focus-within:text-[#2d4a43] transition-colors">
-                    Registry Email
-                  </label>
-                  <div className="relative flex items-center">
-                    <Mail className="absolute left-0 text-slate-300 group-focus-within:text-[#2d4a43] transition-colors" size={16} />
-                    <input 
-                      type="email"
-                      placeholder="alex@journal.com"
-                      className="w-full pl-8 pr-4 py-3 bg-transparent border-b border-black/10 focus:border-[#2d4a43] outline-none transition-all text-[#1a1a1a] font-serif text-lg placeholder:text-slate-200"
-                    />
-                  </div>
-                </motion.div>
-
-                {/* Password Field */}
-                <motion.div variants={itemVars} className="group space-y-2">
-                  <div className="flex justify-between items-center px-1">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] group-focus-within:text-[#2d4a43] transition-colors">
-                      Key Phrase
-                    </label>
-                    <Link to="#" className="text-[9px] font-bold text-slate-300 hover:text-[#2d4a43] uppercase tracking-widest transition-colors">Lost Key?</Link>
-                  </div>
-                  <div className="relative flex items-center">
-                    <Lock className="absolute left-0 text-slate-300 group-focus-within:text-[#2d4a43] transition-colors" size={16} />
-                    <input 
-                      type="password"
-                      placeholder="••••••••"
-                      className="w-full pl-8 pr-4 py-3 bg-transparent border-b border-black/10 focus:border-[#2d4a43] outline-none transition-all text-[#1a1a1a] font-serif text-lg placeholder:text-slate-200"
-                    />
-                  </div>
-                </motion.div>
-              </div>
-
-              {/* Submit Button */}
-              <motion.button 
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="w-full group relative flex justify-center items-center gap-4 bg-[#1a1a1a] text-white py-5 rounded-sm font-bold uppercase tracking-[0.3em] text-[10px] overflow-hidden transition-all shadow-xl shadow-black/10"
+          {/* PASSWORD */}
+          <motion.div variants={itemVars} className="space-y-1.5">
+            <div className="flex justify-between items-center px-1">
+              <label className="text-[13px] font-medium text-slate-700">
+                Password
+              </label>
+              <Link
+                to="/forget-password"
+                className="text-[12px] font-medium text-teal-600 hover:text-teal-700 transition-colors"
               >
-                <span className="relative z-10 flex items-center gap-3">
-                  Authorize Access <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                </span>
-                {/* Hover Background Slide */}
-                <div className="absolute inset-0 bg-[#2d4a43] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-              </motion.button>
-            </form>
+                Forgot password?
+              </Link>
+            </div>
+            <div className="group relative flex items-center">
+              <Lock size={18} className="absolute left-4 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
+              <input
+                type={showPassword ? "text" : "password"} // Dynamic type
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-transparent rounded-2xl outline-none focus:bg-white focus:border-teal-500/30 focus:ring-4 focus:ring-teal-500/5 transition-all text-sm"
+                required
+              />
+              {/* Show/Hide Toggle Button */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </motion.div>
 
-            <footer className="text-center pt-4">
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                New reader?{' '}
-                <Link to="/register" className="text-[#2d4a43] hover:text-[#1a1a1a] transition-colors ml-2 border-b border-[#2d4a43]/20 pb-0.5">
-                  Request Access
-                </Link>
-              </p>
-            </footer>
+          {/* REMEMBER ME */}
+          <div className="flex items-center gap-2 px-1">
+            <input
+              type="checkbox"
+              id="remember"
+              name="rememberMe"
+              checked={formData.rememberMe}
+              onChange={handleChange}
+              className="w-4 h-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500 accent-teal-600 cursor-pointer"
+            />
+            <label htmlFor="remember" className="text-sm text-slate-500 select-none cursor-pointer">
+              Keep me signed in
+            </label>
           </div>
-        </div>
+
+          {/* SUBMIT BUTTON */}
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            disabled={loading}
+            className="w-full mt-2 flex justify-center items-center gap-2 bg-slate-900 text-white py-4 rounded-2xl font-semibold shadow-xl shadow-slate-200 hover:bg-slate-800 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? "Verifying..." : "Sign In"}
+            {!loading && <ArrowRight size={18} className="ml-1" />}
+          </motion.button>
+        </form>
+
+        <footer className="text-center mt-10">
+          <p className="text-sm text-slate-500">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="text-slate-900 font-bold hover:underline decoration-teal-500 underline-offset-4"
+            >
+              Create one for free
+            </Link>
+          </p>
+        </footer>
       </motion.div>
     </div>
   );

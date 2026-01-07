@@ -1,159 +1,331 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, User, Mail, Lock, ShieldPlus, Hash } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowRight,
+  User,
+  Mail,
+  Lock,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  Sparkles,
+  ShieldCheck,
+  RefreshCcw,
+} from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+
+import {
+  sendOtpThunk,
+  verifyOtpThunk,
+  registerThunk,
+} from "../features/auth/authThunk";
 
 const Register = () => {
-  // Animation Variants
-  const fadeUp = {
-    initial: { opacity: 0, y: 15 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, ease: "easeOut" }
-  };
+  const inputRefs = useRef([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  // --- States ---
+  const [timer, setTimer] = useState(0);
+  const [canResend, setCanResend] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
+
+  const { loading, otpSent, emailVerified } = useSelector((state) => state.auth);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    otp: "",
+  });
+
+  // --- Animations (Same as Login) ---
   const containerVars = {
-    initial: { opacity: 0, y: 10 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
 
   const itemVars = {
-    initial: { opacity: 0, y: 10 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+    initial: { opacity: 0, x: -10 },
+    animate: { opacity: 1, x: 0 }
+  };
+
+  // Timer Effect
+  useEffect(() => {
+    let interval;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else {
+      setCanResend(true);
+      if (interval) clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSendOtp = async () => {
+    if (!formData.email.includes("@")) {
+      return toast.error("Enter valid email");
+    }
+    setOtpLoading(true);
+    try {
+      const res = await dispatch(sendOtpThunk(formData.email));
+      if (res.type.includes("fulfilled")) {
+        toast.success("OTP Sent Successfully");
+        setTimer(30);
+        setCanResend(false);
+      } else {
+        toast.error(res.payload || "Failed to send OTP");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (formData.otp.length !== 6) return toast.error("Enter 6-digit OTP");
+    const res = await dispatch(
+      verifyOtpThunk({
+        email: formData.email,
+        otp: formData.otp,
+      })
+    );
+    if (res.type.includes("fulfilled")) {
+      toast.success("Email Verified");
+    } else {
+      toast.error(res.payload || "Invalid OTP");
+    }
+  };
+
+  const handleOtpChange = (e, index) => {
+    const value = e.target.value;
+    if (isNaN(value)) return;
+    const newOtpArr = formData.otp.split("");
+    newOtpArr[index] = value.substring(value.length - 1);
+    const combinedOtp = newOtpArr.join("");
+    setFormData({ ...formData, otp: combinedOtp });
+    if (value && index < 5) {
+      inputRefs.current[index + 1].focus();
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace" && !formData.otp[index] && index > 0) {
+      inputRefs.current[index - 1].focus();
+    }
+  };
+
+  const handleFinalRegister = async (e) => {
+    e.preventDefault();
+    if (!emailVerified) return toast.error("Verify email first");
+    if (formData.password !== formData.confirmPassword) {
+      return toast.error("Passwords do not match");
+    }
+    const res = await dispatch(
+      registerThunk({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      })
+    );
+    if (res.type.includes("fulfilled")) {
+      toast.success("Account Created");
+      navigate("/login");
+    } else {
+      toast.error(res.payload);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center mt-15 selection:bg-[#2d4a43] selection:text-white p-4">
+    <div className="min-h-screen bg-[#fafafa] flex items-start md:items-center justify-center pt-28 pb-12 px-6 font-sans text-slate-900 relative overflow-x-hidden">
       
-      {/* Main Container - Slimmer Max Width */}
-      <motion.div 
+      {/* Background Decorative Line - Isse 'fixed' kiya taaki scroll karne par ye top par hi rahe */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 via-teal-500 to-sky-600 z-50" />
+
+      <motion.div
         variants={containerVars}
         initial="initial"
         animate="animate"
-        className="flex w-full max-w-5xl bg-white shadow-[0_30px_80px_-20px_rgba(0,0,0,0.08)] overflow-hidden rounded-sm border border-black/5"
+        // CHANGE 3: Max-height aur responsiveness handle ki
+        className="w-full max-w-[480px] bg-white p-8 md:p-12 rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 z-10 my-auto"
       >
+        {/* HEADER */}
+        <header className="mb-8">
+          <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-900 mb-6">
+            <Sparkles size={24} />
+          </div>
+          <h2 className="text-3xl font-serif font-medium tracking-tight text-slate-900">
+            Join the story
+          </h2>
+          <p className="text-slate-500 text-sm mt-2">
+            Create an account to start your writing journey.
+          </p>
+        </header>
 
-        {/* LEFT SIDE: Visual Branding */}
-        <div className="hidden lg:flex w-5/12 bg-[#2d4a43] p-12 flex-col justify-between relative overflow-hidden text-white">
-          
-          {/* Subtle Paper Texture Overlay */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
-          
-          <motion.div variants={fadeUp} className="z-10">
-            <Link to="/" className="group">
-              <span className="text-xl font-serif tracking-tighter text-white">
-                B-YOUR <span className="italic font-light opacity-80">Journal.</span>
-              </span>
-            </Link>
+        <form className="space-y-5" onSubmit={handleFinalRegister}>
+          {/* NAME */}
+          <motion.div variants={itemVars} className="space-y-1.5">
+            <label className="text-[13px] font-medium text-slate-700 ml-1">Full Name</label>
+            <div className="group relative flex items-center">
+              <User size={18} className="absolute left-4 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
+              <input
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-transparent rounded-2xl outline-none focus:bg-white focus:border-teal-500/30 focus:ring-4 focus:ring-teal-500/5 transition-all text-sm"
+                required
+              />
+            </div>
           </motion.div>
 
-          <div className="z-10 space-y-6">
-            <motion.div variants={fadeUp}>
-              <div className="flex items-center gap-2 mb-4">
-                <Hash className="text-white/40" size={14} />
-                <span className="text-[9px] font-black uppercase text-white/40 tracking-[0.4em]">Directory / 002</span>
-              </div>
-              <h2 className="text-5xl xl:text-6xl font-serif italic leading-[1] text-white">
-                Join the <br /> 
-                <span className="opacity-90">Community.</span>
-              </h2>
-              <div className="h-[1px] w-12 bg-white/30 mt-8" />
-            </motion.div>
-            
-            <motion.p variants={fadeUp} className="text-white/50 text-[10px] max-w-[240px] leading-relaxed uppercase tracking-[0.3em] font-bold border-l border-white/10 pl-4">
-              Access curated stories, digital art, and premium tech insights.
-            </motion.p>
-          </div>
+          {/* EMAIL & VERIFY */}
+          <motion.div variants={itemVars} className="space-y-1.5">
+            <label className="text-[13px] font-medium text-slate-700 ml-1">Email Address</label>
+            <div className={`group relative flex items-center transition-all ${emailVerified ? 'ring-2 ring-emerald-500/10' : ''}`}>
+              <Mail size={18} className={`absolute left-4 ${emailVerified ? 'text-emerald-500' : 'text-slate-400 group-focus-within:text-teal-600'} transition-colors`} />
+              <input
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={otpSent || emailVerified}
+                placeholder="name@example.com"
+                className={`w-full pl-12 pr-12 py-3.5 rounded-2xl outline-none text-sm transition-all border border-transparent
+                  ${emailVerified ? "bg-emerald-50 text-emerald-700 font-medium" : "bg-slate-50 focus:bg-white focus:border-teal-500/30 focus:ring-4 focus:ring-teal-500/5"}`}
+                required
+              />
+              {emailVerified && <CheckCircle2 size={18} className="absolute right-4 text-emerald-500" />}
+            </div>
 
-          <motion.div variants={fadeUp} className="z-10 flex justify-between items-center text-[9px] text-white/30 font-bold uppercase tracking-[0.3em]">
-            <span className="flex items-center gap-2">
-              <ShieldPlus size={12} /> SECURE PROTOCOL
-            </span>
-            <span>Est. 2024</span>
+            {!emailVerified && formData.email.includes("@") && (
+              <div className="flex justify-end pt-1">
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={otpLoading || (otpSent && !canResend)}
+                  className="text-[12px] font-bold text-teal-600 hover:text-teal-700 flex items-center gap-1 transition-all disabled:opacity-50"
+                >
+                  {otpLoading ? <RefreshCcw size={12} className="animate-spin" /> : null}
+                  {otpSent ? (canResend ? "Resend OTP" : `Resend in ${timer}s`) : "Verify Email"}
+                </button>
+              </div>
+            )}
           </motion.div>
 
-          {/* Large Watermark */}
-          <div className="absolute -bottom-6 -left-6 text-[18vw] font-black text-white/[0.02] leading-none pointer-events-none uppercase tracking-tighter select-none">
-            JOIN
-          </div>
-        </div>
-
-        {/* RIGHT SIDE: Form Section */}
-        <div className="flex-1 flex flex-col justify-center px-8 md:px-16 lg:px-20 py-12 bg-white relative">
-          <div className="max-w-sm w-full mx-auto space-y-10">
-
-            {/* Header */}
-            <motion.header variants={itemVars} className="space-y-3">
-              <h3 className="text-5xl font-serif text-[#1a1a1a] tracking-tight">Register.</h3>
-              <p className="text-slate-400 text-[11px] font-bold uppercase tracking-widest italic font-serif">Begin your digital anthology</p>
-            </motion.header>
-
-            {/* Form */}
-            <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
-              
-              <div className="space-y-6">
-                {/* Name Field */}
-                <motion.div variants={itemVars} className="group space-y-2">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1 group-focus-within:text-[#2d4a43] transition-colors">Nominal Name</label>
-                  <div className="relative flex items-center">
-                    <User className="absolute left-0 text-slate-300 group-focus-within:text-[#2d4a43] transition-colors" size={16} />
-                    <input 
-                      type="text" 
-                      placeholder="Alex Rivers"
-                      className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-black/10 focus:border-[#2d4a43] outline-none transition-all text-[#1a1a1a] font-serif text-lg placeholder:text-slate-200"
-                    />
-                  </div>
-                </motion.div>
-
-                {/* Email Field */}
-                <motion.div variants={itemVars} className="group space-y-2">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1 group-focus-within:text-[#2d4a43] transition-colors">Registry Email</label>
-                  <div className="relative flex items-center">
-                    <Mail className="absolute left-0 text-slate-300 group-focus-within:text-[#2d4a43] transition-colors" size={16} />
-                    <input 
-                      type="email" 
-                      placeholder="user@journal.com"
-                      className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-black/10 focus:border-[#2d4a43] outline-none transition-all text-[#1a1a1a] font-serif text-lg placeholder:text-slate-200"
-                    />
-                  </div>
-                </motion.div>
-
-                {/* Password Field */}
-                <motion.div variants={itemVars} className="group space-y-2">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1 group-focus-within:text-[#2d4a43] transition-colors">Security Key</label>
-                  <div className="relative flex items-center">
-                    <Lock className="absolute left-0 text-slate-300 group-focus-within:text-[#2d4a43] transition-colors" size={16} />
-                    <input 
-                      type="password" 
-                      placeholder="••••••••"
-                      className="w-full pl-8 pr-4 py-2.5 bg-transparent border-b border-black/10 focus:border-[#2d4a43] outline-none transition-all text-[#1a1a1a] font-serif text-lg placeholder:text-slate-200"
-                    />
-                  </div>
-                </motion.div>
-              </div>
-
-              {/* Submit Button */}
-              <motion.button 
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="w-full group relative flex justify-center items-center gap-4 bg-[#1a1a1a] text-white py-5 rounded-sm font-bold uppercase tracking-[0.3em] text-[10px] overflow-hidden transition-all shadow-xl shadow-black/10"
+          {/* OTP GRID (Same as before) */}
+          <AnimatePresence>
+            {otpSent && !emailVerified && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
               >
-                <span className="relative z-10 flex items-center gap-3">
-                  Create Account <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                </span>
-                <div className="absolute inset-0 bg-[#2d4a43] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-              </motion.button>
-            </form>
+                <div className="p-6 bg-slate-50 rounded-[24px] border border-slate-100 my-2">
+                  <p className="text-[11px] uppercase font-bold text-slate-400 mb-4 text-center tracking-widest">Security Code</p>
+                  <div className="flex justify-between gap-2 mb-4">
+                    {[0, 1, 2, 3, 4, 5].map((index) => (
+                      <input
+                        key={index}
+                        ref={(el) => (inputRefs.current[index] = el)}
+                        type="text"
+                        maxLength="1"
+                        value={formData.otp[index] || ""}
+                        onChange={(e) => handleOtpChange(e, index)}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
+                        className="w-10 h-12 border border-slate-200 rounded-xl text-center text-xl font-bold bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/5 outline-none transition-all"
+                      />
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleVerifyOtp}
+                    disabled={formData.otp.length !== 6 || loading}
+                    className="w-full py-3 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    <ShieldCheck size={16} />
+                    {loading ? "Verifying..." : "Confirm Code"}
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-            {/* Bottom Link */}
-            <motion.p variants={itemVars} className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest pt-2">
-              Already a member?{' '}
-              <Link to="/login" className="text-[#2d4a43] hover:text-[#1a1a1a] transition-colors ml-2 border-b border-[#2d4a43]/20 pb-0.5">
-                Sign In
-              </Link>
-            </motion.p>
-          </div>
-        </div>
+          {/* PASSWORDS (Grid) */}
+          <motion.div variants={itemVars} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-[13px] font-medium text-slate-700 ml-1">Password</label>
+              <div className="group relative flex items-center">
+                <Lock size={18} className="absolute left-4 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-10 py-3.5 bg-slate-50 border border-transparent rounded-2xl outline-none focus:bg-white focus:border-teal-500/30 focus:ring-4 focus:ring-teal-500/5 transition-all text-sm"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 text-slate-400 hover:text-slate-600"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[13px] font-medium text-slate-700 ml-1">Confirm</label>
+              <div className="group relative flex items-center">
+                <Lock size={18} className="absolute left-4 text-slate-400 group-focus-within:text-teal-600 transition-colors" />
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3.5 bg-slate-50 border border-transparent rounded-2xl outline-none focus:bg-white focus:border-teal-500/30 focus:ring-4 focus:ring-teal-500/5 transition-all text-sm"
+                  required
+                />
+              </div>
+            </div>
+          </motion.div>
 
+          {/* SUBMIT */}
+          <motion.button
+            variants={itemVars}
+            whileHover={emailVerified ? { y: -2 } : {}}
+            whileTap={emailVerified ? { scale: 0.98 } : {}}
+            type="submit"
+            disabled={!emailVerified || loading}
+            className={`w-full mt-2 py-4 rounded-2xl font-semibold flex items-center justify-center transition-all shadow-xl
+              ${emailVerified && !loading
+                ? "bg-slate-900 text-white shadow-slate-200 hover:bg-slate-800"
+                : "bg-slate-100 text-slate-400 cursor-not-allowed shadow-none"}`}
+          >
+            {loading ? "Creating account..." : "Complete Registration"}
+            {!loading && <ArrowRight size={18} className="ml-2" />}
+          </motion.button>
+        </form>
+
+        <footer className="mt-8 text-center">
+          <p className="text-sm text-slate-500">
+            Already a member?{" "}
+            <Link to="/login" className="text-slate-900 font-bold hover:underline decoration-teal-500 underline-offset-4">
+              Sign In
+            </Link>
+          </p>
+        </footer>
       </motion.div>
     </div>
   );

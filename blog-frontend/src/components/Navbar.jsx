@@ -1,18 +1,44 @@
-import React, { useState, useEffect } from "react";
-import { Search, Menu, X, User, Edit3, Feather } from "lucide-react";
-import { NavLink, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect, useRef } from "react";
+import { User, Feather, LogOut, ChevronDown, Settings, Bookmark, LayoutGrid, Menu, X } from "lucide-react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Navbar = () => {
-  // Safe selector check (added fallback if redux state isn't ready)
   const user = useSelector((state) => state?.auth?.user || null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const dropdownRef = useRef(null);
 
-  const categories = ["Technology", "Travel", "Food", "Lifestyle", "Finance"];
-  const navItems = ["HOME", "BLOGS", "ABOUT", "CONTACT"];
+  const navItems = [
+    { name: "HOME", path: "/" },
+    { name: "EXPLORE", path: "/blogs" },
+    { name: "ABOUT", path: "/about" },
+    { name: "CONTACT", path: "/contact" }
+  ];
+
+  // Close menus on resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1024) setIsMobileMenuOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -20,160 +46,160 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Prevent scroll when mobile menu is open
-  useEffect(() => {
-    if (isMobileMenuOpen) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "unset";
-  }, [isMobileMenuOpen]);
+  const handleLogout = () => {
+    dispatch({ type: "auth/logout" }); 
+    setIsProfileOpen(false);
+    setIsMobileMenuOpen(false);
+    navigate("/login");
+  };
 
   return (
     <>
-      <nav className={`fixed top-0 w-full z-[100] transition-all duration-700 ${
+      <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
         scrolled 
-          ? "bg-white/80 backdrop-blur-xl py-3 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border-b border-black/5" 
-          : "bg-transparent py-6"
+          ? "bg-white/90 backdrop-blur-xl py-3 shadow-[0_2px_20px_rgba(0,0,0,0.02)]" 
+          : "bg-transparent py-6 md:py-8"
       }`}>
-        
-        <div className="container mx-auto px-6 md:px-10 lg:px-16 flex justify-between items-center">
-          {/* CENTER: Logo (Responsive Text size) */}
-          <div className="flex justify-start lg:justify-center w-auto lg:w-1/2">
-            <NavLink to="/" className="group flex flex-col items-center">
-              <span className="text-xl md:text-2xl font-serif tracking-tighter text-[#1a1a1a] flex items-center gap-2">
-                B-YOUR <span className="italic font-light text-[#2d4a43]">Journal.</span>
-              </span>
-              <motion.div 
-                className="h-[1.5px] bg-[#2d4a43]" 
-                initial={{ width: 0 }}
-                whileHover={{ width: "100%" }}
-                transition={{ duration: 0.5 }}
-              />
-            </NavLink>
-          </div>
+        <div className="max-w-[1440px] mx-auto px-5 md:px-12 flex justify-between items-center">
+          
+          {/* LEFT: MOBILE MENU ICON & DESKTOP NAV */}
+          <div className="flex items-center lg:w-1/3">
+            <button 
+              className="lg:hidden p-2 -ml-2 text-slate-900" 
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
+              <Menu size={24} />
+            </button>
 
-          {/* RIGHT: Actions */}
-          <div className="flex items-center justify-end w-auto lg:w-1/4 gap-3 md:gap-6">
-            
-            {/* Nav Links (Desktop) */}
-            <div className="hidden xl:flex items-center space-x-6 mr-4">
+            <div className="hidden lg:flex items-center space-x-10">
               {navItems.map((item) => (
-                <NavLink
-                  key={item}
-                  to={item === "HOME" ? "/" : `/${item.toLowerCase()}`}
-                  className={({ isActive }) =>
-                    `text-[10px] font-bold tracking-[0.2em] transition-all relative py-1 ${
-                      isActive ? "text-[#2d4a43]" : "text-[#1a1a1a]/60 hover:text-[#1a1a1a]"
-                    }`
-                  }
+                <NavLink 
+                  key={item.name} 
+                  to={item.path}
+                  className={({ isActive }) => `relative group text-[11px] font-bold tracking-[0.2em] transition-colors ${
+                    isActive ? "text-slate-900" : "text-slate-400 hover:text-slate-900"
+                  }`}
                 >
-                  {item}
+                  {item.name}
+                  <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-teal-500 rounded-full opacity-0 group-[.active]:opacity-100 transition-opacity" />
                 </NavLink>
               ))}
             </div>
+          </div>
 
-            {/* Write Button (Hidden on very small screens) */}
-            <Link 
-              to="/write" 
-              className="hidden sm:flex items-center gap-2 bg-[#1a1a1a] text-white px-5 py-2.5 rounded-full hover:bg-[#2d4a43] transition-all duration-300 shadow-lg shadow-black/5 active:scale-95"
-            >
-              <Feather size={14} />
-              <span className="text-[10px] font-black tracking-widest uppercase">Write</span>
+          {/* CENTER: LOGO */}
+          <div className="flex justify-center flex-1 lg:w-1/3">
+            <Link to="/" className="group flex flex-col items-center">
+              <span className="text-xl md:text-2xl font-serif font-medium tracking-tighter text-slate-900">
+                B-YOUR <span className="italic font-light text-slate-400 group-hover:text-teal-600 transition-colors">Journal.</span>
+              </span>
+            </Link>
+          </div>
+
+          {/* RIGHT: ACTIONS */}
+          <div className="flex items-center justify-end lg:w-1/3 gap-3 md:gap-8">
+            <Link to="/write" className="hidden md:flex items-center gap-2.5 text-slate-900 group hover:opacity-70 transition-all">
+              <div className="p-2 bg-slate-50 group-hover:bg-teal-50 rounded-full transition-colors">
+                <Feather size={15} />
+              </div>
+              <span className="text-[11px] font-bold tracking-[0.15em] uppercase">Write</span>
             </Link>
 
-            {/* Account Profile */}
-            <Link 
-              to={user ? "/profile" : "/login"} 
-              className="flex items-center gap-3 group sm:border-l border-black/10 sm:pl-6"
-            >
-              <div className="hidden sm:block text-right">
-                <p className="text-[10px] font-bold text-[#1a1a1a] leading-none uppercase tracking-tighter">
-                  {user ? user.name.split(' ')[0] : "Sign In"}
-                </p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-[#1a1a1a]/5 border border-black/5 flex items-center justify-center group-hover:bg-[#1a1a1a] group-hover:text-white transition-all duration-500 overflow-hidden">
-                {user?.avatar ? <img src={user.avatar} className="w-full h-full object-cover" alt="p" /> : <User size={18} />}
-              </div>
-            </Link>
+            <div className="relative" ref={dropdownRef}>
+              {user ? (
+                <div className="flex items-center">
+                  <button onClick={() => setIsProfileOpen(!isProfileOpen)} className="flex items-center gap-2 focus:outline-none">
+                    <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-slate-100 border-2 border-white ring-1 ring-slate-100 overflow-hidden">
+                      {user?.avatar ? <img src={user.avatar} className="w-full h-full object-cover" /> : <User size={16} className="m-auto mt-2 text-slate-400" />}
+                    </div>
+                    <ChevronDown size={12} className={`hidden md:block text-slate-400 transition-transform ${isProfileOpen ? "rotate-180" : ""}`} />
+                  </button>
 
-            {/* Mobile Toggle Button */}
-            <button 
-              className="lg:hidden p-2 text-[#1a1a1a] hover:bg-black/5 rounded-full transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
-            </button>
+                  <AnimatePresence>
+                    {isProfileOpen && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+                        className="absolute right-0 top-full mt-4 w-60 bg-white border border-slate-100 shadow-xl rounded-2xl overflow-hidden"
+                      >
+                        <div className="px-5 py-4 bg-slate-50/50 border-b border-slate-100">
+                          <p className="text-[13px] font-semibold text-slate-900 truncate">{user?.name}</p>
+                          <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
+                        </div>
+                        <div className="p-1.5">
+                          <DropdownLink to="/profile" icon={<User size={14} />} label="Profile" />
+                          <DropdownLink to="/dashboard" icon={<LayoutGrid size={14} />} label="Dashboard" />
+                          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 text-[12px] text-red-500 hover:bg-red-50 rounded-lg font-medium">
+                            <LogOut size={14} /> Sign Out
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <Link to="/login" className="text-[10px] md:text-[11px] font-bold tracking-widest text-white bg-slate-900 px-5 py-2.5 md:px-7 md:py-3 rounded-full">
+                  SIGN IN
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </nav>
 
-      {/* MOBILE MENU OVERLAY */}
+      {/* MOBILE OVERLAY MENU */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 bg-[#FDFCF8] z-[110] flex flex-col lg:hidden"
-          >
-            {/* Mobile Menu Header */}
-            <div className="flex justify-between items-center px-6 py-6 border-b border-black/5">
-               <span className="text-xl font-serif italic">Menu.</span>
-               <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 bg-black text-white rounded-full">
-                 <X size={20} />
-               </button>
-            </div>
-
-            {/* Mobile Links */}
-            <div className="flex-1 flex flex-col justify-center px-10 space-y-8">
-              {navItems.map((item, idx) => (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  key={item}
-                >
-                  <NavLink
-                    to={item === "HOME" ? "/" : `/${item.toLowerCase()}`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-5xl font-serif text-[#1a1a1a] hover:text-[#2d4a43] transition-colors"
-                  >
-                    {item === "HOME" ? "Index" : item}
-                  </NavLink>
-                </motion.div>
-              ))}
-
-              <div className="pt-10 border-t border-black/5">
-                <p className="text-[10px] font-black tracking-[0.3em] uppercase text-slate-400 mb-6">Categories</p>
-                <div className="grid grid-cols-2 gap-4">
-                  {categories.map((cat) => (
-                    <Link 
-                      key={cat} 
-                      to={`/categories/${cat.toLowerCase()}`} 
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-xs font-bold uppercase tracking-widest text-[#1a1a1a]/60 hover:text-[#2d4a43]"
-                    >
-                      {cat}
-                    </Link>
-                  ))}
-                </div>
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[110] lg:hidden"
+            />
+            <motion.div 
+              initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 bottom-0 w-[80%] max-w-sm bg-white z-[120] lg:hidden p-8 flex flex-col"
+            >
+              <div className="flex justify-between items-center mb-12">
+                <span className="font-serif font-bold text-xl tracking-tighter">B-YOUR.</span>
+                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 bg-slate-50 rounded-full">
+                  <X size={20} />
+                </button>
               </div>
-            </div>
 
-            {/* Mobile Footer */}
-            <div className="p-10">
-               <Link 
-                to="/write" 
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full flex justify-center items-center gap-3 bg-[#2d4a43] text-white py-5 rounded-xl font-bold uppercase tracking-widest text-xs"
-               >
-                 <Edit3 size={16} /> Start Writing
-               </Link>
-            </div>
-          </motion.div>
+              <div className="flex flex-col gap-6">
+                {navItems.map((item) => (
+                  <NavLink 
+                    key={item.name} to={item.path} 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-2xl font-serif italic text-slate-400 hover:text-slate-900 transition-colors"
+                  >
+                    {item.name.toLowerCase()}
+                  </NavLink>
+                ))}
+              </div>
+
+              <div className="mt-auto pt-8 border-t border-slate-100">
+                <Link 
+                  to="/write" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-teal-50 text-teal-700 rounded-2xl font-bold uppercase tracking-widest text-[11px]"
+                >
+                  <Feather size={16} /> Start Writing
+                </Link>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>
   );
 };
+
+const DropdownLink = ({ to, icon, label }) => (
+  <Link to={to} className="flex items-center gap-3 px-4 py-2.5 text-[12px] text-slate-600 hover:bg-slate-50 rounded-lg transition-all">
+    <span className="text-slate-400">{icon}</span> {label}
+  </Link>
+);
 
 export default Navbar;
