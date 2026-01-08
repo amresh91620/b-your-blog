@@ -3,6 +3,7 @@ import { User, Feather, LogOut, ChevronDown, Settings, Bookmark, LayoutGrid, Men
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
+import { logout } from "../features/auth/authSlice";
 
 const Navbar = () => {
   const user = useSelector((state) => state?.auth?.user || null);
@@ -21,7 +22,6 @@ const Navbar = () => {
     { name: "CONTACT", path: "/contact" }
   ];
 
-  // Close menus on resize
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1024) setIsMobileMenuOpen(false);
@@ -47,7 +47,7 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    dispatch({ type: "auth/logout" }); 
+    dispatch(logout());
     setIsProfileOpen(false);
     setIsMobileMenuOpen(false);
     navigate("/login");
@@ -183,10 +183,19 @@ const Navbar = () => {
                 <Link 
                   to="/write" 
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center gap-3 w-full py-4 bg-teal-50 text-teal-700 rounded-2xl font-bold uppercase tracking-widest text-[11px]"
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-teal-50 text-teal-700 rounded-2xl font-bold uppercase tracking-widest text-[11px] mb-4"
                 >
                   <Feather size={16} /> Start Writing
                 </Link>
+                
+                {user && (
+                  <button 
+                    onClick={handleLogout}
+                    className="flex items-center justify-center gap-3 w-full py-3 text-red-600 border border-red-200 rounded-xl font-medium hover:bg-red-50 transition-colors"
+                  >
+                    <LogOut size={16} /> Sign Out
+                  </button>
+                )}
               </div>
             </motion.div>
           </>
