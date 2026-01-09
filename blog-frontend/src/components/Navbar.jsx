@@ -126,7 +126,6 @@ const Navbar = () => {
                           <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
                         </div>
                         <div className="p-1.5">
-                          <DropdownLink to="/profile" icon={<User size={14} />} label="Profile" />
                           <DropdownLink to="/dashboard" icon={<LayoutGrid size={14} />} label="Dashboard" />
                           <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 text-[12px] text-red-500 hover:bg-red-50 rounded-lg font-medium">
                             <LogOut size={14} /> Sign Out
@@ -180,6 +179,13 @@ const Navbar = () => {
               </div>
 
               <div className="mt-auto pt-8 border-t border-slate-100">
+                <Link 
+                  to="/dashboard" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-blue-50 text-blue-700 rounded-2xl font-bold uppercase tracking-widest text-[11px] mb-4"
+                >
+                  <LayoutGrid size={16} /> Dashboard
+                </Link>
                 <Link 
                   to="/write" 
                   onClick={() => setIsMobileMenuOpen(false)}

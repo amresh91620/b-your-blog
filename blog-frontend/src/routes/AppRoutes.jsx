@@ -9,6 +9,7 @@ import BlogPostDetail from "../pages/BlogPostDetail";
 import ProtectedRoute from "./ProtectedRoute";
 import WritePage from "../pages/WritePage";
 import ForgotPassword from "../pages/ForgotPassword";
+import Dashboard from "../pages/Dashboard";
 
 const AppRoutes = () => {
   return (
@@ -22,13 +23,21 @@ const AppRoutes = () => {
       <Route path="/blogs" element={<BlogPage />} />
       <Route path="/blogs/:id" element={<BlogPostDetail/>} />
       <Route 
-  path="/write" 
-  element={
-    <ProtectedRoute>
-      <WritePage />
-    </ProtectedRoute>
-  } 
-/>
+        path="/write" 
+        element={
+          <ProtectedRoute>
+            <WritePage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/dashboard" 
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } 
+      />
     </Routes>
   );
 };
