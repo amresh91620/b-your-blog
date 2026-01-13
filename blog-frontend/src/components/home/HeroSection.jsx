@@ -57,7 +57,7 @@ const HeroSection = () => {
             <div className="overflow-hidden">
               <motion.h1 
                 variants={revealVariant}
-                className="text-7xl md:text-9xl lg:text-[9rem] font-serif leading-[0.8] tracking-tighter text-[#2d4a43]"
+                className="text-7xl md:text-9xl lg:text-[9rem] font-serif leading-[0.8] tracking-tighter text-[#1ee2b4]"
               >
                 <span className="italic font-light">Narrative.</span>
               </motion.h1>
@@ -79,7 +79,7 @@ const HeroSection = () => {
             transition={{ delay: 1.2, duration: 0.8 }}
             className="flex flex-wrap gap-8 pt-4 items-center"
           >
-            <Link to="/write" className="bg-[#1a1a1a] text-[#FDFCF8] px-8 py-4 rounded-full text-xs font-bold tracking-widest hover:bg-[#2d4a43] transition-all duration-300">
+            <Link to="/write" className="bg-[#236656] text-[#FDFCF8] px-8 py-4 rounded-full text-xs font-bold tracking-widest text-[#1ee2b4] transition-all duration-300">
               START WRITING
             </Link>
             
@@ -120,7 +120,7 @@ const HeroSection = () => {
             <div className="absolute -top-6 -left-6 w-full h-full border border-[#94745c]/20 rounded-t-[200px] -z-10" />
             
             {/* Minimal Stat Card */}
-            <div className="absolute -bottom-6 -left-6 bg-[#2d4a43] text-[#FDFCF8] p-6 hidden md:block z-30 shadow-xl">
+            <div className="absolute -bottom-6 -left-6 bg-[#236656] text-[#FDFCF8] p-6 hidden md:block z-30 shadow-xl">
                <p className="text-[8px] tracking-[0.3em] uppercase opacity-60 mb-1">Community</p>
                <p className="text-xl font-serif">500+ Writers</p>
             </div>

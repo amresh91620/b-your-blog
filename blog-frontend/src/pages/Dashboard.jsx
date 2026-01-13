@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   ArrowLeft,
+  Search,
 } from "lucide-react";
 
 import { logout } from "../features/auth/authSlice";
@@ -38,15 +39,15 @@ const Dashboard = () => {
   const user = useSelector((state) => state.auth.user);
 
   const menuItems = [
-    { id: "home", label: "Dashboard", icon: HomeIcon },
-    { id: "blogs", label: "My Blogs", icon: FileText },
-    { id: "create", label: "Create Blog", icon: Plus },
-    { id: "comments", label: "Comments", icon: MessageCircle, badge: 5 },
-    { id: "profile", label: "Profile", icon: User },
-    { id: "bookmarks", label: "Bookmarks", icon: Bookmark },
-    { id: "notifications", label: "Notifications", icon: Bell, badge: 3 },
-    { id: "analytics", label: "Analytics", icon: BarChart3 },
-    { id: "settings", label: "Settings", icon: Settings },
+    { id: "home", label: "Overview", icon: HomeIcon },
+    { id: "blogs", label: "My Stories", icon: FileText },
+    { id: "create", label: "Write New", icon: Plus },
+    { id: "comments", label: "Engagements", icon: MessageCircle, badge: 5 },
+    { id: "analytics", label: "Insights", icon: BarChart3 },
+    { id: "bookmarks", label: "Saved", icon: Bookmark },
+    { id: "notifications", label: "Inbox", icon: Bell, badge: 3 },
+    { id: "profile", label: "Account", icon: User },
+    { id: "settings", label: "Preferences", icon: Settings },
   ];
 
   const handleLogout = () => {
@@ -54,9 +55,7 @@ const Dashboard = () => {
     navigate("/login");
   };
 
-  const handleBackToHome = () => {
-    navigate("/");
-  };
+  const handleBackToHome = () => navigate("/");
 
   const handleCreateBlog = () => {
     setActiveTab("create");
@@ -64,169 +63,149 @@ const Dashboard = () => {
   };
 
   const renderContent = () => {
-    switch (activeTab) {
-      case "home":
-        return <DashboardHome />;
-      case "blogs":
-        return <MyBlogs onCreateBlog={handleCreateBlog} />;
-      case "create":
-        return <CreateBlog />;
-      case "comments":
-        return <Comments />;
-      case "profile":
-        return <Profile />;
-      case "bookmarks":
-        return <Bookmarks />;
-      case "notifications":
-        return <Notifications />;
-      case "analytics":
-        return <Analytics />;
-      case "settings":
-        return <SettingsSecurity />;
-      default:
-        return <DashboardHome />;
-    }
+    const components = {
+      home: <DashboardHome />,
+      blogs: <MyBlogs onCreateBlog={handleCreateBlog} />,
+      create: <CreateBlog />,
+      comments: <Comments />,
+      profile: <Profile />,
+      bookmarks: <Bookmarks />,
+      notifications: <Notifications />,
+      analytics: <Analytics />,
+      settings: <SettingsSecurity />,
+    };
+    return components[activeTab] || <DashboardHome />;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-white to-zinc-100 flex overflow-hidden">
+    <div className="min-h-screen bg-[#FDFDFD] text-zinc-900 flex overflow-hidden font-sans">
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+          className="fixed inset-0 bg-zinc-900/20 backdrop-blur-sm z-40 lg:hidden transition-opacity"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-72
-        bg-white/80 backdrop-blur-xl
-        border-r border-zinc-200
-        shadow-[0_10px_40px_rgba(0,0,0,0.06)]
-        transform transition-all duration-300
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-64
+        bg-white border-r border-zinc-100
+        transform transition-all duration-500 ease-in-out
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-7 border-b border-zinc-200">
-          <h1 className="text-xl font-semibold tracking-wide text-zinc-900">
-            User Dashboard
-          </h1>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-2 rounded-xl hover:bg-zinc-100"
-          >
-            <X size={20} />
-          </button>
-        </div>
+        <div className="flex flex-col h-full">
+          {/* Logo Section */}
+          <div className="h-20 flex items-center px-8">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-[#236656] rounded-lg flex items-center justify-center">
+                <div className="w-3 h-3 bg-white rotate-45" />
+              </div>
+              <span className="text-lg font-bold tracking-tight">STUDIO</span>
+            </div>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden ml-auto p-2 text-zinc-400"
+            >
+              <X size={20} />
+            </button>
+          </div>
 
-        {/* Menu */}
-        <nav className="px-3 py-4 space-y-1 overflow-y-auto">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id);
-                  setSidebarOpen(false);
-                }}
-                className={`group w-full flex items-center justify-between px-4 py-3 rounded-xl
-                transition-all duration-300
-                ${
-                  activeTab === item.id
-                    ? "bg-zinc-900 text-white shadow-lg scale-[1.02]"
-                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
-                }`}
-              >
-                <div className="flex items-center">
-                  <Icon
-                    size={20}
-                    className="mr-3 transition-transform group-hover:scale-110"
-                  />
-                  <span className="font-medium">{item.label}</span>
-                </div>
+          {/* Navigation */}
+          <nav className="flex-1 px-4 py-4 space-y-1">
+            <p className="px-4 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-4">
+              Menu
+            </p>
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all duration-200 group
+                  ${isActive 
+                    ? "bg-[#236656] text-white shadow-md shadow-zinc-200" 
+                    : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900"}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+                    <span className="text-sm font-medium">{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold
+                      ${isActive ? "bg-white/20 text-white" : "bg-zinc-100 text-zinc-600"}`}>
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
 
-                {item.badge && (
-                  <span
-                    className={`text-xs font-semibold rounded-full px-2 py-0.5
-                    ${
-                      activeTab === item.id
-                        ? "bg-white text-zinc-900"
-                        : "bg-rose-500 text-white"
-                    }`}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Footer */}
-        <div className="p-5 border-t border-zinc-200 space-y-2">
-          <button
-            onClick={handleBackToHome}
-            className="w-full flex items-center px-4 py-3 text-zinc-600 hover:bg-zinc-100 rounded-xl"
-          >
-            <ArrowLeft size={20} className="mr-3" />
-            Back to Home
-          </button>
-
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl"
-          >
-            <LogOut size={20} className="mr-3" />
-            Logout
-          </button>
+          {/* Footer Actions */}
+          <div className="p-4 border-t border-zinc-50 space-y-1">
+            <button 
+              onClick={handleBackToHome}
+              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-zinc-500 hover:text-zinc-900 transition-colors"
+            >
+              <ArrowLeft size={18} />
+              <span>Main Site</span>
+            </button>
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
+            >
+              <LogOut size={18} />
+              <span>Sign Out</span>
+            </button>
+          </div>
         </div>
       </aside>
 
-      {/* Main */}
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 h-screen">
-        {/* Top Bar */}
-        <header className="bg-white/70 backdrop-blur-xl border-b border-zinc-200 px-6 lg:px-10 py-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="lg:hidden p-2 rounded-xl hover:bg-zinc-100 mr-3"
-              >
-                <Menu size={20} />
-              </button>
-              <h2 className="text-2xl lg:text-3xl font-semibold text-zinc-900">
-                {menuItems.find((i) => i.id === activeTab)?.label || "Dashboard"}
+        {/* Top Navigation Bar */}
+        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-zinc-100 px-8 flex items-center justify-between sticky top-0 z-30">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2 bg-zinc-50 rounded-lg"
+            >
+              <Menu size={20} />
+            </button>
+            <div>
+              <h2 className="text-sm font-bold text-zinc-900">
+                {menuItems.find((i) => i.id === activeTab)?.label}
               </h2>
+              <p className="text-xs text-zinc-400 hidden sm:block">
+                Welcome back, {user?.name?.split(" ")[0] || "Writer"}
+              </p>
             </div>
+          </div>
 
-            <div className="flex items-center gap-4">
-              <div className="relative cursor-pointer">
-                <Bell size={22} />
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white text-xs flex items-center justify-center rounded-full">
-                  3
-                </span>
-              </div>
-
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-950 flex items-center justify-center shadow-md">
-                <span className="text-white font-semibold text-sm">
-                  {user?.name
-                    ? user.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase()
-                    : "U"}
-                </span>
+          <div className="flex items-center gap-6">            
+            <div className="flex items-center gap-4 border-l border-zinc-100 pl-6">              
+              <div className="flex items-center gap-3 group cursor-pointer">
+                <div className="w-9 h-9 rounded-full ring-2 ring-zinc-100 ring-offset-2 overflow-hidden bg-zinc-900 flex items-center justify-center text-white text-xs font-bold transition-transform group-hover:scale-105">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                </div>
               </div>
             </div>
           </div>
         </header>
 
-        {/* Content */}
-        <main className="flex-1 p-6 lg:p-10 overflow-y-auto">
-          {renderContent()}
+        {/* Content Section */}
+        <main className="flex-1 overflow-y-auto bg-[#FDFDFD]">
+          <div className="max-w-7xl mx-auto p-6 lg:p-10">
+            {/* Minimalist entry animation container */}
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+              {renderContent()}
+            </div>
+          </div>
         </main>
       </div>
     </div>

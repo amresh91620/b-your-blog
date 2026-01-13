@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Reply, Trash2, Clock, MessageCircle } from 'lucide-react';
+import { Reply, Trash2, Clock, MessageCircle, CheckCircle2, MoreVertical, Filter } from 'lucide-react';
 
 const Comments = () => {
   const [comments] = useState([
@@ -55,46 +55,39 @@ const Comments = () => {
     const now = new Date();
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
     
-    if (diffInHours < 1) {
-      return 'Just now';
-    } else if (diffInHours < 24) {
-      return `${diffInHours} hours ago`;
-    } else {
-      const diffInDays = Math.floor(diffInHours / 24);
-      return `${diffInDays} days ago`;
-    }
-  };
-
-  const handleReply = (commentId) => {
-    console.log('Replying to comment:', commentId);
-    // Add reply logic here
-  };
-
-  const handleDelete = (commentId) => {
-    console.log('Deleting comment:', commentId);
-    // Add delete logic here
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    return `${diffInDays}d ago`;
   };
 
   const unreadCount = comments.filter(comment => !comment.isRead).length;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-700">
+      
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Comments</h1>
-          <p className="text-gray-600">
-            Manage comments on your blog posts
-            {unreadCount > 0 && (
-              <span className="ml-2 inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                {unreadCount} unread
-              </span>
-            )}
+          <div className="flex items-center gap-2 mb-2">
+            <MessageCircle size={18} className="text-[#236656]" />
+            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-[#236656]">Community</span>
+          </div>
+          <h1 className="text-3xl font-black text-zinc-900 tracking-tight">Responses</h1>
+          <p className="text-zinc-500 text-sm mt-1">
+            You have <span className="font-bold text-[#236656]">{unreadCount} new messages</span> waiting for your reply.
           </p>
         </div>
-        <div className="flex items-center text-sm text-gray-600">
-          <MessageCircle size={16} className="mr-2" />
-          {comments.length} total comments
+
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-2 px-4 py-2 bg-zinc-100 text-zinc-600 rounded-xl text-sm font-bold hover:bg-zinc-200 transition-all">
+            <Filter size={16} />
+            Filter
+          </button>
+          <button className="flex items-center gap-2 px-4 py-2 bg-[#236656] text-white rounded-xl text-sm font-bold hover:shadow-lg shadow-[#236656]/20 transition-all">
+            <CheckCircle2 size={16} />
+            Mark all read
+          </button>
         </div>
       </div>
 
@@ -103,72 +96,84 @@ const Comments = () => {
         {comments.map((comment) => (
           <div
             key={comment.id}
-            className={`bg-white rounded-xl p-6 shadow-sm border transition-all hover:shadow-md ${
-              !comment.isRead ? 'ring-2 ring-blue-100 bg-blue-50/30' : ''
+            className={`group bg-white rounded-[2rem] p-8 border transition-all duration-300 ${
+              !comment.isRead 
+                ? 'border-[#236656]/20 shadow-xl shadow-[#236656]/5 ring-1 ring-[#236656]/5' 
+                : 'border-zinc-100 shadow-sm hover:border-zinc-200'
             }`}
           >
-            {/* Comment Header */}
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-medium text-sm">
+            <div className="flex flex-col md:flex-row md:items-start gap-6">
+              
+              {/* Avatar & Indicator */}
+              <div className="relative shrink-0">
+                <div className="w-14 h-14 bg-[#236656]/5 rounded-2xl flex items-center justify-center text-[#236656] font-black text-lg border border-[#236656]/10 shadow-inner">
                   {comment.commenterAvatar}
                 </div>
-                <div>
-                  <h3 className="font-medium text-gray-900">{comment.commenterName}</h3>
-                  <p className="text-sm text-gray-600">
-                    Commented on: <span className="font-medium">{comment.blogTitle}</span>
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center text-sm text-gray-500">
-                <Clock size={14} className="mr-1" />
-                {formatDate(comment.date)}
                 {!comment.isRead && (
-                  <div className="ml-3 w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-[#236656] border-4 border-white rounded-full"></div>
                 )}
               </div>
-            </div>
 
-            {/* Comment Content */}
-            <div className="mb-4">
-              <p className="text-gray-700 leading-relaxed">{comment.comment}</p>
-            </div>
+              {/* Content Body */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2">
+                      {comment.commenterName}
+                      {!comment.isRead && (
+                        <span className="text-[9px] bg-[#236656] text-white px-2 py-0.5 rounded-full uppercase tracking-tighter">New</span>
+                      )}
+                    </h3>
+                    <p className="text-xs text-zinc-400 font-medium">
+                      On <span className="text-[#236656] font-bold cursor-pointer hover:underline">{comment.blogTitle}</span>
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 text-zinc-400">
+                    <span className="text-[10px] font-bold flex items-center gap-1 uppercase tracking-tighter bg-zinc-50 px-2 py-1 rounded-lg">
+                      <Clock size={12} />
+                      {formatDate(comment.date)}
+                    </span>
+                    <button className="p-1 hover:bg-zinc-50 rounded-lg text-zinc-300 hover:text-zinc-600 transition-colors">
+                      <MoreVertical size={18} />
+                    </button>
+                  </div>
+                </div>
 
-            {/* Comment Actions */}
-            <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => handleReply(comment.id)}
-                  className="flex items-center px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-sm font-medium"
-                >
-                  <Reply size={16} className="mr-2" />
-                  Reply
-                </button>
-                <button
-                  onClick={() => handleDelete(comment.id)}
-                  className="flex items-center px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium"
-                >
-                  <Trash2 size={16} className="mr-2" />
-                  Delete
-                </button>
+                <p className="text-zinc-600 leading-relaxed text-[15px] my-5">
+                  "{comment.comment}"
+                </p>
+
+                {/* Interactive Actions */}
+                <div className="flex items-center justify-between pt-6 border-t border-zinc-50">
+                  <div className="flex items-center gap-2">
+                    <button className="flex items-center px-5 py-2.5 bg-[#236656] text-white rounded-xl text-xs font-bold hover:shadow-lg shadow-[#236656]/10 active:scale-95 transition-all gap-2">
+                      <Reply size={14} />
+                      Reply to {comment.commenterName.split(' ')[0]}
+                    </button>
+                    <button className="p-2.5 text-zinc-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all">
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                  
+                  {comment.isRead && (
+                    <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest">Archived</span>
+                  )}
+                </div>
               </div>
-              {!comment.isRead && (
-                <button className="text-xs text-blue-600 hover:text-blue-700 font-medium">
-                  Mark as read
-                </button>
-              )}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Empty State (if no comments) */}
+      {/* Empty State */}
       {comments.length === 0 && (
-        <div className="bg-white rounded-xl p-12 shadow-sm border text-center">
-          <MessageCircle size={48} className="mx-auto text-gray-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No comments yet</h3>
-          <p className="text-gray-600">
-            When readers comment on your blogs, they'll appear here.
+        <div className="bg-white rounded-[3rem] p-20 border border-zinc-100 text-center shadow-inner">
+          <div className="w-20 h-20 bg-zinc-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
+            <MessageCircle size={32} className="text-zinc-200" />
+          </div>
+          <h3 className="text-2xl font-black text-zinc-900 mb-2">Quiet in here...</h3>
+          <p className="text-zinc-400 max-w-xs mx-auto text-sm leading-relaxed">
+            Your stories are waiting for their first conversation. Share your work to start the discussion.
           </p>
         </div>
       )}

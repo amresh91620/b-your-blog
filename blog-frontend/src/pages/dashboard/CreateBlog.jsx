@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, Save, Send, X, Plus, Image as ImageIcon, Sparkles, Hash, Layers } from 'lucide-react';
+import { Upload, Save, Send, X, Plus, Image as ImageIcon, Sparkles, Hash, Layers, Info } from 'lucide-react';
 import MDEditor from '@uiw/react-md-editor';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
@@ -14,7 +14,6 @@ const CreateBlog = () => {
   });
   
   const [newTag, setNewTag] = useState('');
-  const [dragActive, setDragActive] = useState(false);
 
   const categories = [
     'Technology', 'Programming', 'Web Development', 'Design', 'AI/ML', 'DevOps'
@@ -37,156 +36,171 @@ const CreateBlog = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto pb-20 animate-in fade-in slide-in-from-bottom-6 duration-700">
+    <div className="max-w-6xl mx-auto pb-20 animate-in fade-in slide-in-from-bottom-6 duration-700">
       
-      {/* 🚀 Top Navigation Header (Sticky) */}
-      <div className="sticky top-0 z-30 flex items-center justify-between py-4 mb-8 bg-slate-50/80 backdrop-blur-md border-b border-slate-200/60 -mx-4 px-4 sm:mx-0 sm:px-0">
+      {/* 🚀 Premium Sticky Header */}
+      <div className="sticky top-0 z-40 flex items-center justify-between py-6 mb-10 bg-zinc-50/80 backdrop-blur-xl border-b border-zinc-200/50 -mx-4 px-4 sm:mx-0 sm:px-0">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-            <Sparkles className="text-indigo-600" size={24} />
-            Drafting Story
-          </h1>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-2 h-2 bg-[#236656] rounded-full animate-pulse" />
+            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Studio Mode</span>
+          </div>
+          <h1 className="text-2xl font-black text-zinc-900 tracking-tight">Compose Story</h1>
         </div>
-        <div className="flex items-center gap-3">
-          <button className="hidden sm:flex items-center px-5 py-2.5 text-slate-600 font-bold hover:bg-slate-100 rounded-xl transition-all">
+        
+        <div className="flex items-center gap-4">
+          <button className="hidden sm:flex items-center px-4 py-2.5 text-zinc-500 font-bold text-sm hover:text-zinc-900 transition-colors">
             <Save size={18} className="mr-2" />
             Save Draft
           </button>
-          <button className="flex items-center px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:scale-[1.02] active:scale-95 transition-all">
+          <button className="flex items-center px-6 py-2.5 bg-[#236656] text-white font-bold rounded-xl shadow-lg shadow-[#236656]/20 hover:bg-[#1a4d41] hover:scale-[1.02] active:scale-95 transition-all">
             <Send size={18} className="mr-2" />
-            Publish Now
+            Publish
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         
-        {/* 📝 Main Editor Area */}
+        {/* 📝 Editor Column */}
         <div className="lg:col-span-8 space-y-8">
           
-          {/* Title Input */}
-          <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200/60 p-8">
-            <input
-              type="text"
+          {/* Headline Input */}
+          <div className="bg-white rounded-[2.5rem] shadow-sm border border-zinc-100 p-10 group focus-within:border-[#236656]/30 transition-all">
+            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-4 block">Story Title</label>
+            <textarea
               name="title"
+              rows="2"
               value={formData.title}
               onChange={handleInputChange}
-              placeholder="Enter a catchy title..."
-              className="w-full text-4xl font-black text-slate-900 placeholder:text-slate-200 outline-none border-none bg-transparent"
+              placeholder="Title your story..."
+              className="w-full text-4xl lg:text-5xl font-black text-zinc-900 placeholder:text-zinc-100 outline-none border-none bg-transparent resize-none leading-tight"
             />
           </div>
 
-          {/* Markdown Editor */}
-          <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200/60 overflow-hidden">
-             <div className="px-8 py-4 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-black uppercase tracking-widest text-slate-400">Content Editor</span>
-                <span className="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded italic">Markdown Supported</span>
+          {/* Content Editor */}
+          <div className="bg-white rounded-[2.5rem] shadow-sm border border-zinc-100 overflow-hidden focus-within:border-[#236656]/30 transition-all">
+             <div className="px-8 py-5 bg-zinc-50/50 border-b border-zinc-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-black uppercase tracking-widest text-zinc-500">Manuscript</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="text-[10px] font-bold text-[#236656] bg-[#236656]/5 px-3 py-1 rounded-full uppercase">Markdown</span>
+                </div>
              </div>
-             <div className="p-2 min-h-[500px]" data-color-mode="light">
+             <div className="p-4 min-h-[600px]" data-color-mode="light">
               <MDEditor
                 value={formData.content}
                 onChange={(val) => setFormData(prev => ({ ...prev, content: val || '' }))}
                 preview="edit"
-                height={500}
-                className="!border-none !shadow-none"
+                height={600}
+                className="!border-none !shadow-none !bg-transparent"
               />
             </div>
           </div>
         </div>
 
-        {/* ⚙️ Sidebar Options */}
-        <div className="lg:col-span-4 space-y-6">
+        {/* ⚙️ Configuration Sidebar */}
+        <div className="lg:col-span-4 space-y-8">
           
-          {/* Cover Image Upload */}
-          <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200/60 p-6">
-            <h3 className="text-sm font-black text-slate-900 mb-4 flex items-center uppercase tracking-wider">
-              <ImageIcon className="mr-2 text-indigo-600" size={16} /> Cover Media
+          {/* Media Section */}
+          <div className="bg-white rounded-[2rem] shadow-sm border border-zinc-100 p-8">
+            <h3 className="text-xs font-black text-zinc-900 mb-6 flex items-center uppercase tracking-widest">
+              <ImageIcon className="mr-2 text-[#236656]" size={16} /> Cover Image
             </h3>
             
             <div 
-              className={`relative aspect-video rounded-2xl border-2 border-dashed flex flex-col items-center justify-center transition-all overflow-hidden ${
-                formData.coverImage ? 'border-indigo-600' : 'border-slate-200 hover:border-indigo-400 bg-slate-50/50'
+              className={`relative aspect-[4/3] rounded-[1.5rem] border-2 border-dashed flex flex-col items-center justify-center transition-all overflow-hidden group ${
+                formData.coverImage ? 'border-[#236656]' : 'border-zinc-200 hover:border-[#236656]/50 bg-zinc-50/50 hover:bg-white'
               }`}
             >
               {formData.coverImage ? (
                 <>
                   <img src={URL.createObjectURL(formData.coverImage)} alt="Preview" className="w-full h-full object-cover" />
-                  <button 
-                    onClick={() => setFormData(prev => ({ ...prev, coverImage: null }))}
-                    className="absolute top-2 right-2 p-1.5 bg-rose-500 text-white rounded-lg shadow-lg hover:bg-rose-600"
-                  >
-                    <X size={16} />
-                  </button>
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <button 
+                      onClick={() => setFormData(prev => ({ ...prev, coverImage: null }))}
+                      className="p-3 bg-white text-rose-500 rounded-2xl shadow-xl hover:scale-110 transition-transform"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
                 </>
               ) : (
-                <label className="cursor-pointer flex flex-col items-center p-6 text-center">
-                  <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center mb-3 text-slate-400 group-hover:text-indigo-600 transition-colors">
-                    <Upload size={20} />
+                <label className="cursor-pointer flex flex-col items-center p-8 text-center w-full">
+                  <div className="w-14 h-14 bg-white rounded-2xl shadow-sm border border-zinc-100 flex items-center justify-center mb-4 text-zinc-400 group-hover:text-[#236656] group-hover:scale-110 transition-all">
+                    <Upload size={24} />
                   </div>
-                  <p className="text-xs font-bold text-slate-500">Drop cover image or <span className="text-indigo-600 underline">browse</span></p>
+                  <p className="text-xs font-bold text-zinc-500 uppercase tracking-tighter">Click to upload cover</p>
+                  <p className="text-[10px] text-zinc-400 mt-2">16:9 Aspect ratio recommended</p>
                   <input type="file" className="hidden" accept="image/*" onChange={(e) => e.target.files[0] && setFormData(p => ({...p, coverImage: e.target.files[0]}))} />
                 </label>
               )}
             </div>
           </div>
 
-          {/* Category Selection */}
-          <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200/60 p-6">
-            <h3 className="text-sm font-black text-slate-900 mb-4 flex items-center uppercase tracking-wider">
-              <Layers className="mr-2 text-indigo-600" size={16} /> Category
+          {/* Classification Selection */}
+          <div className="bg-white rounded-[2rem] shadow-sm border border-zinc-100 p-8">
+            <h3 className="text-xs font-black text-zinc-900 mb-6 flex items-center uppercase tracking-widest">
+              <Layers className="mr-2 text-[#236656]" size={16} /> Category
             </h3>
             <select
               name="category"
               value={formData.category}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 outline-none font-bold text-slate-600 transition-all appearance-none cursor-pointer"
+              className="w-full px-5 py-4 bg-zinc-50 border-none rounded-2xl focus:ring-2 focus:ring-[#236656]/20 font-bold text-zinc-600 transition-all appearance-none cursor-pointer"
             >
-              <option value="">Choose category</option>
+              <option value="">Select Topic</option>
               {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
             </select>
           </div>
 
-          {/* Tag System */}
-          <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200/60 p-6">
-            <h3 className="text-sm font-black text-slate-900 mb-4 flex items-center uppercase tracking-wider">
-              <Hash className="mr-2 text-indigo-600" size={16} /> Keywords
+          {/* Keywords / Tags */}
+          <div className="bg-white rounded-[2rem] shadow-sm border border-zinc-100 p-8">
+            <h3 className="text-xs font-black text-zinc-900 mb-6 flex items-center uppercase tracking-widest">
+              <Hash className="mr-2 text-[#236656]" size={16} /> Search Tags
             </h3>
             
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-wrap gap-2 mb-6">
               {formData.tags.map((tag, idx) => (
-                <span key={idx} className="flex items-center px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-xs font-black border border-indigo-100 group">
+                <span key={idx} className="flex items-center pl-3 pr-1 py-1.5 bg-[#236656]/5 text-[#236656] rounded-xl text-[11px] font-bold border border-[#236656]/10">
                   {tag}
-                  <button onClick={() => handleRemoveTag(tag)} className="ml-2 text-indigo-400 hover:text-rose-500 transition-colors">
+                  <button onClick={() => handleRemoveTag(tag)} className="ml-2 p-1 hover:bg-[#236656]/10 rounded-lg transition-colors">
                     <X size={12} />
                   </button>
                 </span>
               ))}
             </div>
 
-            <div className="relative group">
+            <div className="relative">
               <input
                 type="text"
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
-                placeholder="Press enter to add..."
-                className="w-full px-4 py-3 pr-12 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 outline-none font-bold text-slate-600 transition-all"
+                placeholder="Add tag..."
+                className="w-full px-5 py-4 pr-12 bg-zinc-50 border-none rounded-2xl focus:ring-2 focus:ring-[#236656]/20 font-bold text-zinc-600 transition-all"
               />
-              <button onClick={handleAddTag} className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+              <button onClick={handleAddTag} className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-[#236656] text-white rounded-xl hover:bg-[#1a4d41] transition-colors shadow-lg shadow-[#236656]/20">
                 <Plus size={16} />
               </button>
             </div>
           </div>
 
-          {/* Tips Card */}
-          <div className="bg-indigo-600 rounded-[2rem] p-6 text-white relative overflow-hidden group">
-             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-125 transition-transform duration-700">
-                <Sparkles size={80} />
+          {/* AI / Pro Tip */}
+          <div className="bg-zinc-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden group shadow-xl">
+             <div className="relative z-10">
+               <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center mb-6">
+                <Sparkles className="text-emerald-400" size={20} />
+               </div>
+               <h4 className="font-bold text-lg mb-3 leading-tight">Increase reach by 2x</h4>
+               <p className="text-xs text-zinc-400 leading-relaxed font-medium">
+                 Adding a detailed category and at least <span className="text-white font-bold">5 keywords</span> helps our recommendation engine find the right audience for your story.
+               </p>
              </div>
-             <h4 className="font-black text-lg mb-2">Writing Tip</h4>
-             <p className="text-xs text-indigo-100 leading-relaxed font-medium">
-                Articles with at least one high-quality cover image and 3 tags get 40% more engagement.
-             </p>
+             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:rotate-12 transition-transform duration-1000">
+               <Sparkles size={120} />
+             </div>
           </div>
 
         </div>
