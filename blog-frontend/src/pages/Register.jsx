@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
+  ArrowLeft,
   User,
   Mail,
   Lock,
@@ -115,14 +116,17 @@ const Register = () => {
   };
 
   return (
-    <div className="h-screen w-full flex bg-[#f4f1ea] font-sans overflow-hidden">
+    <div className="h-screen w-full flex  bg-[#FDFCF8]  font-sans overflow-hidden">
       
       {/* LEFT SIDE: FORM SECTION */}
       <div className="w-full lg:w-[50%] h-full flex flex-col overflow-y-auto">
-        <div className="flex-1 flex flex-col p-6 md:p-8 relative z-20 bg-[#f4f1ea]">
+        <div className="flex-1 flex flex-col p-6 md:p-8 relative z-20  bg-[#FDFCF8] ">
           
-          {/* Logo */}
-          <div className="flex-shrink-0 mb-4">
+          {/* Back Button & Logo */}
+          <div className="flex-shrink-0 mb-4 flex items-center gap-3">
+            <Link to="/" className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+              <ArrowLeft size={20} className="text-slate-600" />
+            </Link>
             <Link to="/" className="flex items-center gap-2">
               <div className="w-10 h-10 bg-[#236656] rounded-xl flex items-center justify-center text-white">
                 <Feather size={20} />
@@ -135,152 +139,162 @@ const Register = () => {
 
           <div className="flex-1 flex items-center justify-center">
             <div className="max-w-[440px] w-full">
-              <header className="mb-6">
-                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-slate-900 mb-4 shadow-sm border border-slate-100">
-                  <Sparkles size={24} />
-                </div>
-                <h1 className="text-4xl font-serif font-medium text-[#236656] mb-2 tracking-tight">Join the story</h1>
-                <p className="text-slate-500 text-base">Create an account to start your writing journey.</p>
-              </header>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key="register-form"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                >
+                  <header className="mb-6">
+                    <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-slate-900 mb-4 shadow-sm border border-slate-100">
+                      <Sparkles size={24} />
+                    </div>
+                    <h1 className="text-4xl font-serif font-medium text-[#236656] mb-2 tracking-tight">Join the story</h1>
+                    <p className="text-slate-500 text-base">Create an account to start your writing journey.</p>
+                  </header>
 
-          <form className="space-y-4" onSubmit={handleFinalRegister}>
-            {/* NAME */}
-            <div className="space-y-1.5">
-              <label className="text-[13px] font-bold text-slate-700 ml-1">Full Name</label>
-              <div className="group relative flex items-center">
-                <User size={18} className="absolute left-5 text-slate-400 group-focus-within:text-slate-900 transition-colors" />
-                <input
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Your Name"
-                  className="w-full pl-14 pr-5 py-3.5 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 transition-all text-sm shadow-sm"
-                  required
-                />
-              </div>
-            </div>
+                  <form className="space-y-4" onSubmit={handleFinalRegister}>
+                    {/* NAME */}
+                    <div className="space-y-1.5">
+                      <label className="text-[13px] font-bold text-slate-700 ml-1">Full Name</label>
+                      <div className="group relative flex items-center">
+                        <User size={18} className="absolute left-5 text-slate-400 group-focus-within:text-slate-900 transition-colors" />
+                        <input
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          placeholder="Your Name"
+                          className="w-full pl-14 pr-5 py-3.5 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 transition-all text-sm shadow-sm"
+                          required
+                        />
+                      </div>
+                    </div>
 
-            {/* EMAIL & VERIFY */}
-            <div className="space-y-1.5">
-              <label className="text-[13px] font-bold text-slate-700 ml-1">Email Address</label>
-              <div className="relative flex items-center group">
-                <Mail size={18} className={`absolute left-5 ${emailVerified ? 'text-emerald-500' : 'text-slate-400 group-focus-within:text-slate-900'}`} />
-                <input
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  disabled={otpSent || emailVerified}
-                  placeholder="name@example.com"
-                  className={`w-full pl-14 pr-12 py-3.5 rounded-full text-sm transition-all border outline-none shadow-sm
-                    ${emailVerified ? "bg-emerald-50 border-emerald-100 text-emerald-700 font-medium" : "bg-white border-slate-200 focus:border-slate-400"}`}
-                  required
-                />
-                {emailVerified && <CheckCircle2 size={18} className="absolute right-5 text-emerald-500" />}
-              </div>
+                    {/* EMAIL & VERIFY */}
+                    <div className="space-y-1.5">
+                      <label className="text-[13px] font-bold text-slate-700 ml-1">Email Address</label>
+                      <div className="relative flex items-center group">
+                        <Mail size={18} className={`absolute left-5 ${emailVerified ? 'text-emerald-500' : 'text-slate-400 group-focus-within:text-slate-900'}`} />
+                        <input
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          disabled={otpSent || emailVerified}
+                          placeholder="name@example.com"
+                          className={`w-full pl-14 pr-12 py-3.5 rounded-full text-sm transition-all border outline-none shadow-sm
+                            ${emailVerified ? "bg-emerald-50 border-emerald-100 text-emerald-700 font-medium" : "bg-white border-slate-200 focus:border-slate-400"}`}
+                          required
+                        />
+                        {emailVerified && <CheckCircle2 size={18} className="absolute right-5 text-emerald-500" />}
+                      </div>
 
-              {!emailVerified && formData.email.includes("@") && (
-                <div className="flex justify-end pr-2">
-                  <button
-                    type="button"
-                    onClick={handleSendOtp}
-                    disabled={otpLoading || (otpSent && !canResend)}
-                    className="text-[12px] font-bold text-slate-900 hover:text-slate-600 flex items-center gap-1 transition-all disabled:opacity-50"
-                  >
-                    {otpLoading ? <RefreshCcw size={12} className="animate-spin" /> : null}
-                    {otpSent ? (canResend ? "Resend OTP" : `Resend in ${timer}s`) : "Verify Email"}
-                  </button>
-                </div>
-              )}
-            </div>
+                      {!emailVerified && formData.email.includes("@") && (
+                        <div className="flex justify-end pr-2">
+                          <button
+                            type="button"
+                            onClick={handleSendOtp}
+                            disabled={otpLoading || (otpSent && !canResend)}
+                            className="text-[12px] font-bold text-slate-900 hover:text-slate-600 flex items-center gap-1 transition-all disabled:opacity-50"
+                          >
+                            {otpLoading ? <RefreshCcw size={12} className="animate-spin" /> : null}
+                            {otpSent ? (canResend ? "Resend OTP" : `Resend in ${timer}s`) : "Verify Email"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
 
-            {/* OTP SECTION */}
-            <AnimatePresence>
-              {otpSent && !emailVerified && (
-                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-5 bg-white rounded-3xl border border-slate-200 shadow-inner my-2">
-                  <p className="text-[10px] uppercase font-bold text-slate-400 mb-4 text-center tracking-widest">Security Code</p>
-                  <div className="flex justify-between gap-2 mb-4">
-                    {[0, 1, 2, 3, 4, 5].map((idx) => (
-                      <input
-                        key={idx}
-                        ref={(el) => (inputRefs.current[idx] = el)}
-                        type="text"
-                        maxLength="1"
-                        value={formData.otp[idx] || ""}
-                        onChange={(e) => handleOtpChange(e, idx)}
-                        onKeyDown={(e) => handleKeyDown(e, idx)}
-                        className="w-10 h-12 border border-slate-200 rounded-xl text-center text-xl font-bold bg-slate-50 focus:border-slate-900 focus:bg-white outline-none transition-all"
-                      />
-                    ))}
-                  </div>
-                  <button type="button" onClick={handleVerifyOtp} className="w-full py-3 bg-slate-900 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:bg-black transition-colors">
-                    <ShieldCheck size={16} /> Verify Code
-                  </button>
+                    {/* OTP SECTION */}
+                    <AnimatePresence>
+                      {otpSent && !emailVerified && (
+                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="p-5 bg-white rounded-3xl border border-slate-200 shadow-inner my-2">
+                          <p className="text-[10px] uppercase font-bold text-slate-400 mb-4 text-center tracking-widest">Security Code</p>
+                          <div className="flex justify-between gap-2 mb-4">
+                            {[0, 1, 2, 3, 4, 5].map((idx) => (
+                              <input
+                                key={idx}
+                                ref={(el) => (inputRefs.current[idx] = el)}
+                                type="text"
+                                maxLength="1"
+                                value={formData.otp[idx] || ""}
+                                onChange={(e) => handleOtpChange(e, idx)}
+                                onKeyDown={(e) => handleKeyDown(e, idx)}
+                                className="w-10 h-12 border border-slate-200 rounded-xl text-center text-xl font-bold bg-slate-50 focus:border-slate-900 focus:bg-white outline-none transition-all"
+                              />
+                            ))}
+                          </div>
+                          <button type="button" onClick={handleVerifyOtp} className="w-full py-3 bg-slate-900 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 hover:bg-black transition-colors">
+                            <ShieldCheck size={16} /> Verify Code
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* PASSWORDS */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[13px] font-bold text-slate-700 ml-1">Password</label>
+                        <div className="relative flex items-center group">
+                          <Lock size={18} className="absolute left-5 text-slate-400 group-focus-within:text-slate-900" />
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            placeholder="••••••••"
+                            className="w-full pl-12 pr-10 py-3.5 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 text-sm shadow-sm"
+                            required
+                          />
+                          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 text-slate-400">
+                            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[13px] font-bold text-slate-700 ml-1">Confirm</label>
+                        <div className="relative flex items-center group">
+                          <Lock size={18} className="absolute left-5 text-slate-400 group-focus-within:text-slate-900" />
+                          <input
+                            type="password"
+                            name="confirmPassword"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            placeholder="••••••••"
+                            className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 text-sm shadow-sm"
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={!emailVerified || loading}
+                      className={`w-full mt-4 py-4 rounded-full font-bold flex items-center justify-center transition-all shadow-xl text-lg
+                        ${emailVerified && !loading ? "bg-[#236656] text-white hover:bg-slate-900" : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"}`}
+                    >
+                      {loading ? "..." : "Complete Registration"}
+                      {!loading && <ArrowRight size={20} className="ml-2" />}
+                    </button>
+                  </form>
+
+                  <footer className="mt-6 text-center">
+                    <p className="text-sm text-slate-500 font-medium">
+                      Already a member? <Link to="/login" className="text-slate-900 font-bold underline underline-offset-4 decoration-slate-200 hover:decoration-slate-900 transition-all">Sign In</Link>
+                    </p>
+                  </footer>
                 </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* PASSWORDS */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-[13px] font-bold text-slate-700 ml-1">Password</label>
-                <div className="relative flex items-center group">
-                  <Lock size={18} className="absolute left-5 text-slate-400 group-focus-within:text-slate-900" />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                    className="w-full pl-12 pr-10 py-3.5 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 text-sm shadow-sm"
-                    required
-                  />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 text-slate-400">
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-[13px] font-bold text-slate-700 ml-1">Confirm</label>
-                <div className="relative flex items-center group">
-                  <Lock size={18} className="absolute left-5 text-slate-400 group-focus-within:text-slate-900" />
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                    className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 text-sm shadow-sm"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={!emailVerified || loading}
-              className={`w-full mt-4 py-4 rounded-full font-bold flex items-center justify-center transition-all shadow-xl text-lg
-                ${emailVerified && !loading ? "bg-[#236656] text-white hover:bg-slate-900" : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"}`}
-            >
-              {loading ? "..." : "Complete Registration"}
-              {!loading && <ArrowRight size={20} className="ml-2" />}
-            </button>
-          </form>
-
-              <footer className="mt-6 text-center">
-                <p className="text-sm text-slate-500 font-medium">
-                  Already a member? <Link to="/login" className="text-slate-900 font-bold underline underline-offset-4 decoration-slate-200 hover:decoration-slate-900 transition-all">Sign In</Link>
-                </p>
-              </footer>
+              </AnimatePresence>
             </div>
           </div>
         </div>
       </div>
 
-      {/* RIGHT SIDE: IMAGE SECTION WITH CURVE */}
+      {/* RIGHT SIDE: IMAGE SECTION */}
       <div className="hidden lg:block relative lg:w-[50%] h-screen bg-slate-900">
         <svg 
-          className="absolute left-[-1px] top-0 h-full w-40 fill-[#f4f1ea] z-10" 
+          className="absolute left-[-1px] top-0 h-full w-40  fill-[#FDFCF8] z-10" 
           viewBox="0 0 100 100" 
           preserveAspectRatio="none"
         >
@@ -297,7 +311,7 @@ const Register = () => {
           <motion.div 
             initial={{ opacity: 0, x: 30 }} 
             animate={{ opacity: 1, x: 0 }} 
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
             className="max-w-md ml-12"
           >
             <h2 className="text-5xl font-serif italic mb-6 leading-tight tracking-tight">
@@ -310,7 +324,6 @@ const Register = () => {
           </motion.div>
         </div>
       </div>
-
     </div>
   );
 };

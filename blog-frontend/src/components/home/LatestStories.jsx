@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowUpRight, ArrowRight } from "lucide-react";
@@ -25,78 +26,80 @@ const blogPreviews = [
 
 const LatestStories = () => {
   return (
-    <section className="bg-[#FDFCF8] py-16 md:py-24 border-t border-[#1a1a1a]/5">
-      <div className="max-w-[1400px] mx-auto px-6">
+    <section className="bg-[#FDFCF8] py-20 md:py-28 border-t border-[#1a1a1a]/5 overflow-hidden">
+      <div className="container mx-auto px-6 md:px-12 lg:px-20">
         
-        {/* HEADER: Clean & Balanced */}
-        <div className="flex items-end justify-between mb-16">
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
+        {/* HEADER */}
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-16 gap-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 text-[#94745c]">
                <div className="w-8 h-[1px] bg-[#94745c]/40" />
-               <p className="text-[10px] font-bold tracking-[0.4em] text-[#94745c] uppercase">Editorial Picks</p>
+               <p className="text-[10px] font-bold tracking-[0.5em] uppercase">Editorial Picks</p>
             </div>
-            <h2 className="text-4xl md:text-5xl font-serif text-[#1a1a1a] tracking-tight">
-              Latest <span className="italic font-light text-[#2d4a43]">Stories.</span>
+            <h2 className="text-4xl md:text-5xl font-serif text-[#1a1a1a] tracking-tighter">
+              Latest <span className="italic font-light text-[#1ee2b4]">Stories.</span>
             </h2>
           </div>
-          <Link to="/blogs" className="hidden md:flex items-center gap-3 group text-[10px] font-bold tracking-widest uppercase text-[#1a1a1a]">
-            View Archive <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+          
+          <Link to="/blogs" className="group flex items-center gap-3 text-[10px] font-bold tracking-[0.3em] uppercase text-[#1a1a1a] pb-1 border-b border-[#1a1a1a]/10 hover:border-[#236656] transition-all">
+            View Archive <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform text-[#236656]" />
           </Link>
         </div>
 
-        {/* GRID: Natural Colors & Sophisticated Hover */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        {/* STORIES GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
           {blogPreviews.map((post, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.8 }}
               className="group cursor-pointer flex flex-col h-full"
             >
-              {/* Image Container: High-End Minimal */}
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#f4f1ea] mb-6 rounded-[2px]">
+              {/* Image Container - Colors are now naturally vivid */}
+              <div className="relative aspect-[4/5] overflow-hidden bg-[#f4f1ea] mb-8 rounded-[4px] shadow-sm">
                 <motion.img
-                  whileHover={{ scale: 1.04 }}
+                  whileHover={{ scale: 1.05 }}
                   transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                   src={post.img}
                   alt={post.title}
-                  className="w-full h-full object-cover opacity-95 group-hover:opacity-100 transition-opacity duration-700"
+                  className="w-full h-full object-cover transition-all duration-700" 
                 />
-                {/* Subtle Floating Category */}
-                <div className="absolute top-4 left-4 overflow-hidden">
-                  <span className="block bg-[#FDFCF8]/90 backdrop-blur-sm text-[#1a1a1a] text-[8px] font-bold tracking-widest uppercase px-3 py-1.5 shadow-sm">
+                
+                {/* Floating Category Tag */}
+                <div className="absolute top-6 left-6 overflow-hidden">
+                  <span className="block bg-[#236656] text-[#FDFCF8] text-[8px] font-bold tracking-widest uppercase px-4 py-2 rounded-full shadow-lg">
                     {post.category}
                   </span>
                 </div>
               </div>
 
-              {/* Text: Elegant Hierarchy */}
+              {/* Text Content */}
               <div className="space-y-4 flex-grow px-1">
-                <div className="flex items-center gap-3 text-[9px] font-bold text-[#94745c]/60 tracking-widest uppercase">
+                <div className="flex items-center gap-3 text-[9px] font-bold text-[#94745c] tracking-widest uppercase">
                   <span>{post.date}</span>
-                  <div className="w-1 h-1 rounded-full bg-[#94745c]/30" />
-                  <span className="italic font-serif lowercase tracking-normal">Vol. 04</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#1ee2b4]" />
+                  <span className="italic font-serif lowercase tracking-normal opacity-60">Vol. 04</span>
                 </div>
                 
-                <h3 className="text-2xl font-serif text-[#1a1a1a] leading-snug group-hover:text-[#2d4a43] transition-colors duration-500">
+                <h3 className="text-2xl md:text-3xl font-serif text-[#1a1a1a] leading-tight group-hover:text-[#236656] transition-colors duration-500">
                   {post.title}
                 </h3>
                 
-                <p className="text-[13px] text-[#1a1a1a]/50 font-serif italic leading-relaxed line-clamp-2">
-                  Exploring the narrative through a lens of modern simplicity and {post.category.toLowerCase()}...
+                <p className="text-[14px] text-slate-500 font-serif italic leading-relaxed line-clamp-2">
+                  Exploring the narrative through a lens of modern simplicity and the essence of {post.category.toLowerCase()}...
                 </p>
               </div>
 
-              {/* Link: Understated Luxury */}
-              <div className="pt-6 mt-auto px-1">
-                <div className="inline-flex items-center gap-3 text-[9px] font-black tracking-[0.2em] uppercase text-[#1a1a1a]">
-                  <span className="relative">
+              {/* Action Link */}
+              <div className="pt-8 mt-auto px-1">
+                <div className="inline-flex items-center gap-4 text-[10px] font-bold tracking-[0.4em] uppercase text-[#1a1a1a]">
+                  <span className="relative pb-1">
                     Open Entry
-                    <div className="absolute -bottom-1 left-0 w-full h-[1px] bg-[#2d4a43]/20 group-hover:bg-[#2d4a43] transition-colors" />
+                    <div className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#1ee2b4] group-hover:w-full transition-all duration-700" />
                   </span>
-                  <ArrowUpRight size={12} className="text-[#2d4a43] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
+                  <ArrowUpRight size={14} className="text-[#236656] group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform duration-500" />
                 </div>
               </div>
             </motion.div>

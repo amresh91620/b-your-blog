@@ -9,8 +9,8 @@ const Analytics = () => {
       change: '+23.5%',
       trend: 'up',
       icon: Eye,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100'
+      color: 'text-[#236656]',
+      bgColor: 'bg-[#236656]/10'
     },
     {
       title: 'Engagement Rate',
@@ -18,8 +18,8 @@ const Analytics = () => {
       change: '+1.2%',
       trend: 'up',
       icon: Users,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100'
+      color: 'text-[#236656]',
+      bgColor: 'bg-[#236656]/10'
     },
     {
       title: 'Avg. Read Time',
@@ -27,8 +27,8 @@ const Analytics = () => {
       change: '-0.8%',
       trend: 'down',
       icon: Clock,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100'
+      color: 'text-[#236656]',
+      bgColor: 'bg-[#236656]/10'
     }
   ];
 
@@ -127,7 +127,7 @@ const Analytics = () => {
                 <div className="flex-1 mx-4">
                   <div className="bg-gray-200 rounded-full h-3 relative overflow-hidden">
                     <div
-                      className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-[#236656] to-[#1a4d3d] h-full rounded-full transition-all duration-500"
                       style={{ width: `${(data.views / maxViews) * 100}%` }}
                     />
                   </div>

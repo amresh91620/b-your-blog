@@ -29,9 +29,9 @@ const Profile = () => {
   };
 
   const stats = [
-    { label: 'Published Blogs', value: '24', icon: FileText, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-    { label: 'Total Read Time', value: '450h', icon: Globe, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { label: 'Verified Reach', value: '12.5K', icon: BadgeCheck, color: 'text-amber-600', bg: 'bg-amber-50' },
+    { label: 'Published Blogs', value: '24', icon: FileText, color: 'text-[#236656]', bg: 'bg-[#236656]/10' },
+    { label: 'Total Read Time', value: '450h', icon: Globe, color: 'text-[#236656]', bg: 'bg-[#236656]/10' },
+    { label: 'Verified Reach', value: '12.5K', icon: BadgeCheck, color: 'text-[#236656]', bg: 'bg-[#236656]/10' },
   ];
 
   return (
@@ -62,7 +62,7 @@ const Profile = () => {
               </button>
               <button
                 onClick={() => setIsEditing(false)}
-                className="px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all flex items-center"
+                className="px-6 py-2.5 bg-[#236656] text-white font-bold rounded-xl shadow-lg shadow-[#236656]/20 hover:bg-[#1a4d3d] transition-all flex items-center"
               >
                 <Save size={18} className="mr-2" />
                 Save Changes
@@ -77,7 +77,7 @@ const Profile = () => {
         <div className="lg:col-span-8 space-y-6">
           <div className="bg-white rounded-3xl border border-slate-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.02)] p-8">
             <h2 className="text-xl font-extrabold text-slate-900 mb-8 flex items-center">
-              <span className="w-2 h-6 bg-indigo-600 rounded-full mr-3"></span>
+              <span className="w-2 h-6 bg-[#236656] rounded-full mr-3"></span>
               Personal Details
             </h2>
 
@@ -92,13 +92,13 @@ const Profile = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-4xl font-black">
+                    <div className="w-full h-full bg-gradient-to-br from-[#236656] to-[#1a4d3d] flex items-center justify-center text-white text-4xl font-black">
                       {profileData.name.charAt(0)}
                     </div>
                   )}
                 </div>
                 {isEditing && (
-                  <label className="absolute -bottom-2 -right-2 w-10 h-10 bg-indigo-600 text-white rounded-xl shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+                  <label className="absolute -bottom-2 -right-2 w-10 h-10 bg-[#236656] text-white rounded-xl shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
                     <Camera size={20} />
                     <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
                   </label>
@@ -120,14 +120,14 @@ const Profile = () => {
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 ml-1">Full Name</label>
                 <div className="relative group">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={18} />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#236656] transition-colors" size={18} />
                   <input
                     type="text"
                     name="name"
                     value={profileData.name}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 transition-all outline-none text-slate-600 font-medium disabled:opacity-60"
+                    className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#236656]/10 focus:border-[#236656] transition-all outline-none text-slate-600 font-medium disabled:opacity-60"
                   />
                 </div>
               </div>
@@ -153,7 +153,7 @@ const Profile = () => {
                   onChange={handleInputChange}
                   disabled={!isEditing}
                   rows={4}
-                  className="w-full p-4 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 transition-all outline-none text-slate-600 font-medium resize-none disabled:opacity-60 leading-relaxed"
+                  className="w-full p-4 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#236656]/10 focus:border-[#236656] transition-all outline-none text-slate-600 font-medium resize-none disabled:opacity-60 leading-relaxed"
                 />
               </div>
             </div>
@@ -163,7 +163,7 @@ const Profile = () => {
         {/* Right Column: Sidebar Widgets */}
         <div className="lg:col-span-4 space-y-6">
           {/* Stats Widget */}
-          <div className="bg-slate-900 rounded-3xl p-8 text-white shadow-xl shadow-indigo-100">
+          <div className="bg-slate-900 rounded-3xl p-8 text-white shadow-xl shadow-[#236656]/10">
             <h3 className="text-lg font-bold mb-6">Profile Analytics</h3>
             <div className="space-y-6">
               {stats.map((stat, idx) => (
@@ -183,7 +183,7 @@ const Profile = () => {
           {/* Security Status Widget */}
           <div className="bg-white rounded-3xl border border-slate-200/60 p-8 shadow-sm">
             <h3 className="text-lg font-extrabold text-slate-900 mb-6 flex items-center">
-              <ShieldCheck className="mr-2 text-indigo-600" size={22} />
+              <ShieldCheck className="mr-2 text-[#236656]" size={22} />
               Trust & Safety
             </h3>
             <div className="space-y-4">

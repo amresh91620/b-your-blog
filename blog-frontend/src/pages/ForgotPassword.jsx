@@ -69,11 +69,11 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="h-screen w-full flex bg-[#f4f1ea] font-sans overflow-hidden">
+    <div className="h-screen w-full flex  bg-[#FDFCF8]  font-sans overflow-hidden">
       
       {/* LEFT SIDE: FORM SECTION */}
       <div className="w-full lg:w-[50%] h-full flex flex-col overflow-y-auto">
-        <div className="flex-1 flex flex-col p-6 md:p-12 relative z-20 bg-[#f4f1ea]">
+        <div className="flex-1 flex flex-col p-6 md:p-12 relative z-20  bg-[#FDFCF8] ">
           
           {/* Logo */}
           <div className="flex-shrink-0 mb-4">
@@ -239,7 +239,7 @@ const ForgotPassword = () => {
       {/* RIGHT SIDE: IMAGE SECTION WITH CURVE */}
       <div className="hidden lg:block relative lg:w-[50%] h-screen bg-slate-900">
         <svg 
-          className="absolute left-[-1px] top-0 h-full w-40 fill-[#f4f1ea] z-10" 
+          className="absolute left-[-1px] top-0 h-full w-40  fill-[#FDFCF8] z-10" 
           viewBox="0 0 100 100" 
           preserveAspectRatio="none"
         >

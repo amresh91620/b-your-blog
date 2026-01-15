@@ -1,152 +1,143 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Search, ArrowUpRight, Minus, BookOpen, Clock } from 'lucide-react';
+import { Search, ArrowUpRight, Minus, BookOpen, Clock, Tag } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const blogs = [
   { 
     id: 1, 
     category: "Architecture", 
     title: "The Brutalist Revival in Modern Digital Spaces", 
-    excerpt: "Exploring how heavy textures and raw materials are making a comeback in web aesthetics.",
+    excerpt: "Exploring how heavy textures and raw materials are making a comeback in web aesthetics, moving away from flat design into something more tactile.",
     date: "Jan 12", 
     img: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=800",
-    color: "bg-emerald-50"
+    readTime: "8 MIN READ"
   },
   { 
     id: 2, 
     category: "Design", 
     title: "Intentionality: Why Less is More in UI", 
-    excerpt: "The psychological impact of negative space in high-end interface design.",
+    excerpt: "The psychological impact of negative space in high-end interface design and how it drives focus.",
     date: "Jan 10", 
     img: "https://images.unsplash.com/photo-1434626881859-194d67b2b86f?q=80&w=600",
-    color: "bg-orange-50"
+    readTime: "5 MIN READ"
   },
   { 
     id: 3, 
     category: "Tech", 
     title: "The Ethics of Neural Networks", 
-    excerpt: "Discussing the boundary between human creativity and algorithmic generation.",
+    excerpt: "Discussing the boundary between human creativity and algorithmic generation in the 2026 landscape.",
     date: "Jan 08", 
     img: "https://images.unsplash.com/photo-1509228468518-180dd4864904?q=80&w=600",
-    color: "bg-blue-50"
+    readTime: "12 MIN READ"
   },
   { 
     id: 4, 
     category: "Culture", 
     title: "Digital Minimalism in the Age of Noise", 
-    excerpt: "How to maintain focus in a world designed to capture your every second.",
+    excerpt: "How to maintain focus in a world designed to capture your every second through intentional habits.",
     date: "Jan 05", 
     img: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=600",
-    color: "bg-stone-100"
+    readTime: "6 MIN READ"
   },
 ];
 
 const BlogPage = () => {
   return (
-    <div className="bg-[#fcfaf7] min-h-screen pt-32 pb-20 selection:bg-[#2d4a43] selection:text-white">
-      <div className="max-w-6xl mx-auto px-6 lg:px-10">
+    <div className="bg-[#FDFCF8] min-h-screen pt-32 pb-20 selection:bg-[#236656] selection:text-white font-sans">
+      <div className="container mx-auto px-6 md:px-12 lg:px-20">
         
-        {/* HEADER SECTION - Soft Colors */}
-        <header className="mb-16">
+        {/* HEADER SECTION */}
+        <header className="mb-20">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col md:flex-row md:items-end justify-between gap-8"
+            className="flex flex-col md:flex-row md:items-end justify-between gap-10"
           >
-            <div className="max-w-2xl">
-              <div className="flex items-center gap-3 text-[#2d4a43] mb-4">
+            <div className="max-w-3xl space-y-6">
+              <div className="flex items-center gap-3 text-[#94745c]">
                 <Minus size={24} strokeWidth={3} />
-                <span className="text-[11px] font-black tracking-[0.4em] uppercase">Volume 01 — Archive</span>
+                <span className="text-[10px] font-bold tracking-[0.5em] uppercase">Volume 01 — Archive</span>
               </div>
-              <h1 className="text-7xl md:text-8xl font-serif leading-[0.9] tracking-tighter text-[#1a1a1a]">
-                Latest <span className="italic font-light text-[#2d4a43]">Stories.</span>
+              <h1 className="text-7xl md:text-9xl font-serif leading-[0.85] tracking-tighter text-[#1a1a1a]">
+                Latest <span className="italic font-light text-[#1ee2b4]">Stories.</span>
               </h1>
-              <p className="mt-6 text-slate-500 font-medium uppercase text-[10px] tracking-[0.2em] max-w-sm leading-relaxed">
-                A curated collection of thoughts on design, technology, and the future of digital culture.
+              <p className="text-slate-500 font-serif italic text-lg max-w-md border-l-2 border-[#1ee2b4] pl-6">
+                A curated digital anthology on design, technology, and the evolving landscape of culture.
               </p>
             </div>
 
-            <div className="flex items-center bg-white border border-black/5 rounded-full px-6 py-3 shadow-sm group focus-within:ring-1 ring-[#2d4a43]/20 transition-all">
-              <Search size={16} className="text-slate-400" />
+            {/* Search Bar - Refined */}
+            <div className="flex items-center bg-white border border-[#1a1a1a]/5 rounded-full px-6 py-4 shadow-sm group focus-within:border-[#236656] transition-all w-full md:w-80">
+              <Search size={18} className="text-[#94745c]" />
               <input 
                 type="text" 
-                placeholder="Find a topic..." 
-                className="bg-transparent outline-none px-4 font-sans text-sm w-full md:w-48 placeholder:text-slate-300"
+                placeholder="Search the archive..." 
+                className="bg-transparent outline-none px-4 font-sans text-sm w-full placeholder:text-slate-300"
               />
             </div>
           </motion.div>
         </header>
 
         {/* BLOG GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
           {blogs.map((post, index) => (
             <motion.div 
               key={post.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className={`${index === 0 ? 'lg:col-span-12 flex flex-col lg:flex-row' : 'lg:col-span-6'} group bg-white border border-black/5 rounded-2xl overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] transition-all duration-500`}
+              transition={{ delay: index * 0.1, duration: 0.8 }}
+              className={`${index === 0 ? 'lg:col-span-12 flex flex-col lg:flex-row' : 'lg:col-span-6'} group bg-white border border-[#1a1a1a]/5 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-[#236656]/5 transition-all duration-700`}
             >
               {/* Image Section */}
-              <div className={`${index === 0 ? 'lg:w-3/5 h-[400px]' : 'h-64'} relative overflow-hidden`}>
+              <div className={`${index === 0 ? 'lg:w-[60%] h-[450px]' : 'h-72'} relative overflow-hidden`}>
                 <img 
                   src={post.img} 
                   alt={post.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" 
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                 />
                 <div className="absolute top-6 left-6">
-                  <span className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-[#2d4a43] shadow-sm">
+                  <span className="bg-[#236656] text-[#FDFCF8] px-5 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest shadow-lg">
                     {post.category}
                   </span>
                 </div>
               </div>
 
               {/* Content Section */}
-              <div className={`p-8 lg:p-10 flex flex-col justify-between ${index === 0 ? 'lg:w-2/5' : ''} ${post.color}/30`}>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-slate-400 text-[9px] font-bold uppercase tracking-widest">
-                    <Clock size={12} /> <span>{post.date}</span>
-                    <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                    <span>5 MIN READ</span>
+              <div className={`p-10 flex flex-col justify-between ${index === 0 ? 'lg:w-[40%]' : ''}`}>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3 text-[#94745c] text-[9px] font-bold uppercase tracking-[0.2em]">
+                    <Clock size={12} className="text-[#1ee2b4]" /> 
+                    <span>{post.date}</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#1ee2b4]"></span>
+                    <span>{post.readTime}</span>
                   </div>
-                  <h2 className={`${index === 0 ? 'text-4xl' : 'text-2xl'} font-serif leading-tight text-[#1a1a1a] group-hover:text-[#2d4a43] transition-colors`}>
+                  
+                  <h2 className={`${index === 0 ? 'text-4xl md:text-5xl' : 'text-3xl'} font-serif leading-tight text-[#1a1a1a] group-hover:text-[#236656] transition-colors duration-500`}>
                     {post.title}
                   </h2>
-                  <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 font-sans">
+                  
+                  <p className="text-slate-500 text-base leading-relaxed line-clamp-3 font-serif italic">
                     {post.excerpt}
                   </p>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-black/5 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#2d4a43]">
-                    <BookOpen size={14} />
-                    <span>Read Article</span>
-                  </div>
-                  <div className="w-10 h-10 rounded-full border border-black/5 flex items-center justify-center group-hover:bg-[#2d4a43] group-hover:text-white transition-all">
-                    <ArrowUpRight size={18} className="group-hover:rotate-45 transition-transform" />
-                  </div>
+                <div className="mt-12 pt-8 border-t border-[#1a1a1a]/5 flex items-center justify-between">
+                  <Link to={`/blogs/${post.id}`} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[#1a1a1a]">
+                    <span className="relative pb-1">
+                      Read Entry
+                      <div className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#1ee2b4] group-hover:w-full transition-all duration-700" />
+                    </span>
+                  </Link>
+                  <Link to={`/blogs/${post.id}`} className="w-12 h-12 rounded-full border border-[#1a1a1a]/10 flex items-center justify-center group-hover:bg-[#236656] group-hover:border-[#236656] transition-all duration-500">
+                    <ArrowUpRight size={20} className="text-[#236656] group-hover:text-[#1ee2b4] group-hover:rotate-45 transition-all duration-500" />
+                  </Link>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
-
-        {/* NEWSLETTER SECTION - Added color punch */}
-        <section className="mt-32 p-12 bg-[#2d4a43] rounded-3xl relative overflow-hidden">
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="text-white space-y-2 text-center md:text-left">
-              <h2 className="text-3xl font-serif italic">Subscribe to the archive.</h2>
-              <p className="text-white/60 text-xs font-bold uppercase tracking-widest">No spam, just pure intellectual substance.</p>
-            </div>
-            <div className="flex w-full md:w-auto gap-2">
-              <input type="email" placeholder="email@example.com" className="bg-white/10 border border-white/20 rounded-full px-6 py-3 text-white text-sm outline-none focus:bg-white/20 w-full md:w-64" />
-              <button className="bg-white text-[#2d4a43] px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-stone-100 transition-colors">Join</button>
-            </div>
-          </div>
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 blur-3xl rounded-full -mr-32 -mt-32"></div>
-        </section>
-
       </div>
     </div>
   );

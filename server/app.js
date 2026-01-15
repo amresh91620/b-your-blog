@@ -4,10 +4,15 @@ const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
-// ✅ CORS ko aise configure karein (Sirf app.use(cors()) se kaam nahi chalega)
+// ✅ CORS configuration for network access
 app.use(cors({
-    origin: "http://localhost:5173", // Apne frontend ka URL yahan likhein (Vite ka default yahi hota hai)
-    credentials: true,               // Taaki cookies/tokens transfer ho sakein
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        // Allow all origins in development
+        return callback(null, true);
+    },
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
