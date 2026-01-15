@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -52,7 +53,8 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate("/login");
+    toast.success("You are successfully logged out");
+    navigate("/");
   };
 
   const handleBackToHome = () => navigate("/");

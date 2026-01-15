@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { User, LogOut, ChevronDown, LayoutGrid, Menu, X, Home, Search, Info, Mail } from "lucide-react";
+import { User, LogOut, LayoutGrid, Menu, X, Home, Search, Info, Mail } from "lucide-react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { logout } from "../features/auth/authSlice";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const user = useSelector((state) => state?.auth?.user || null);
@@ -50,14 +51,15 @@ const Navbar = () => {
     dispatch(logout());
     setIsProfileOpen(false);
     setIsMobileMenuOpen(false);
-    navigate("/login");
+    toast.success("You are successfully logged out");
+    navigate("/");
   };
 
   return (
     <>
       <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
         scrolled 
-          ? "bg-white/95 backdrop-blur-xl py-3 shadow-[0_8px_32px_rgba(0,0,0,0.08)] border-b border-slate-100/50" 
+          ? "bg-white/95 backdrop-blur-xl py-3 shadow-[0_8px_32px_rgba(0,0,0,0.08)]  border-slate-100/50" 
           : "bg-transparent py-6 md:py-8"
       }`}>
         <div className="max-w-[1440px] mx-auto px-5 md:px-12 flex justify-between items-center">
@@ -70,7 +72,7 @@ const Navbar = () => {
             <Menu size={24} />
           </button>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation Links */}
           <div className="hidden lg:flex items-center space-x-10">
             {navItems.map((item) => (
               <NavLink 
@@ -83,8 +85,8 @@ const Navbar = () => {
                 {({ isActive }) => (
                   <>
                     {item.name}
-                    <span className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-slate-600 to-slate-800 rounded-full transition-all duration-300 ${
-                      isActive ? "opacity-100 scale-100" : "opacity-0 scale-0"
+                    <span className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-slate-400 to-slate-600 transition-all duration-300 ${
+                      isActive ? "opacity-100 scale-100" : "opacity-0 scale-0 group-hover:opacity-50 group-hover:scale-75"
                     }`} />
                   </>
                 )}
@@ -92,19 +94,20 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Logo */}
+          {/* Logo - Centered */}
           <div className="flex justify-center flex-1 lg:w-1/3">
             <Link to="/" className="group flex flex-col items-center">
               <span className="text-xl md:text-2xl font-serif font-medium tracking-tighter text-slate-900 transition-all duration-300 group-hover:scale-105">
-                B-YOUR <span className="italic font-light text-slate-600 group-hover:text-slate-800 transition-colors">Journal.</span>
+                B-YOUR <span className="italic font-light text-[#236656] group-hover:text-slate-800 transition-colors">Journal.</span>
               </span>
             </Link>
           </div>
 
-          {/* Right Actions */}
+          {/* Right Side Actions */}
           <div className="flex items-center justify-end lg:w-1/3">
             <div className="relative" ref={dropdownRef}>
               {user ? (
+                /* Profile Dropdown for Logged In User */
                 <div className="flex items-center">
                   <button onClick={() => setIsProfileOpen(!isProfileOpen)} className="focus:outline-none group">
                     <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-slate-100 border-2 border-white ring-2 ring-slate-100 overflow-hidden transition-all duration-300 group-hover:ring-slate-200 cursor-pointer">
@@ -114,14 +117,12 @@ const Navbar = () => {
                       }
                     </div>
                   </button>
-
                   <AnimatePresence>
                     {isProfileOpen && (
                       <motion.div 
                         initial={{ opacity: 0, y: 10, scale: 0.95 }} 
                         animate={{ opacity: 1, y: 0, scale: 1 }} 
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
                         className="absolute right-0 top-full mt-4 w-60 bg-white border border-slate-200 shadow-2xl rounded-2xl overflow-hidden backdrop-blur-xl"
                       >
                         <div className="px-5 py-4 bg-slate-50/80 border-b border-slate-100">
@@ -141,90 +142,61 @@ const Navbar = () => {
                   </AnimatePresence>
                 </div>
               ) : (
-                <Link to="/login" className="text-[10px] md:text-[11px] font-bold tracking-widest text-white bg-slate-900 hover:bg-slate-800 px-5 py-2.5 md:px-7 md:py-3 rounded-full transition-all duration-300 hover:scale-105 active:scale-95">
-                  SIGN IN
-                </Link>
+                /* Auth Buttons - Hidden on Mobile, Visible on Desktop */
+                <div className="hidden lg:flex items-center gap-8">
+                  <Link to="/register" className="text-[14px] font-bold text-slate-900 hover:text-slate-600 transition-colors">
+                    Sign up
+                  </Link>
+                  <Link to="/login" className="text-[14px] font-bold text-white bg-[#236656] px-9 py-3.5 rounded-full hover:bg-slate-800 transition-all duration-300">
+                    Log in
+                  </Link>
+                </div>
               )}
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
             <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
               className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[110] lg:hidden"
             />
             
             <motion.div 
-              initial={{ x: "-100%" }} 
-              animate={{ x: 0 }} 
-              exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }}
               className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm bg-white z-[120] lg:hidden flex flex-col shadow-2xl"
             >
               <div className="flex justify-between items-center p-8 pb-4 border-b border-slate-100">
-                <span className="font-bold text-xl tracking-tighter text-slate-900">
-                  B-YOUR <span className="italic font-light text-slate-600">Journal.</span>
-                </span>
-                <button 
-                  onClick={() => setIsMobileMenuOpen(false)} 
-                  className="p-2.5 bg-slate-50 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all duration-300"
-                >
-                  <X size={20} />
-                </button>
+                <span className="font-bold text-xl tracking-tighter text-slate-900">B-YOUR Journal.</span>
+                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2.5 bg-slate-50 text-slate-400 rounded-xl"><X size={20} /></button>
               </div>
 
               <div className="flex flex-col px-6 mt-6 space-y-3">
-                <p className="text-[9px] font-bold tracking-[0.3em] text-slate-400 uppercase mb-2">Navigation</p>
-                {navItems.map((item) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <NavLink 
-                      key={item.name} 
-                      to={item.path} 
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={({ isActive }) => `group flex items-center gap-3 py-3 px-4 rounded-xl transition-all duration-300 ${
-                        isActive ? "bg-slate-100 text-slate-900" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                      }`}
-                    >
-                      <IconComponent size={18} className="text-slate-500" />
-                      <span className="text-sm font-medium">
-                        {item.name}
-                      </span>
-                    </NavLink>
-                  );
-                })}
+                {navItems.map((item) => (
+                  <NavLink key={item.name} to={item.path} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 py-3 px-4 rounded-xl text-slate-600">
+                    <item.icon size={18} />
+                    <span className="text-sm font-medium">{item.name}</span>
+                  </NavLink>
+                ))}
               </div>
 
+              {/* Mobile Auth Buttons - Bottom of Menu */}
               <div className="mt-auto p-8 border-t border-slate-100 bg-slate-50/50">
-                <div className="grid grid-cols-1 gap-3">
-                  {user && (
-                    <>
-                      <Link 
-                        to="/dashboard" 
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center gap-3 w-full p-4 bg-white border border-slate-200 text-slate-700 rounded-xl font-medium text-sm hover:border-slate-300 transition-all duration-300"
-                      >
-                        <LayoutGrid size={16} className="text-slate-500" /> 
-                        Dashboard
-                      </Link>
-                      
-                      <button 
-                        onClick={handleLogout}
-                        className="flex items-center justify-center gap-2 w-full py-3 text-red-500 text-sm font-medium hover:bg-red-50 rounded-xl transition-colors"
-                      >
-                        <LogOut size={14} /> Sign Out
-                      </button>
-                    </>
-                  )}
-                </div>
+                {user ? (
+                  <button onClick={handleLogout} className="flex items-center justify-center gap-2 w-full py-3 text-red-500 font-medium">
+                    <LogOut size={14} /> Sign Out
+                  </button>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full py-4 bg-[#236656] text-white text-center rounded-xl font-bold">Log in</Link>
+                    <Link to="/register" onClick={() => setIsMobileMenuOpen(false)} className="w-full py-4 bg-white border border-slate-200 text-slate-900 text-center rounded-xl font-bold">Sign up</Link>
+                  </div>
+                )}
               </div>
             </motion.div>
           </>
