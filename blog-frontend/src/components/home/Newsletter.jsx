@@ -1,8 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle, Send } from "lucide-react";
+import toast from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { sendMessageThunk } from "../../features/contact/contactThunk";
+import { resetContactState } from "../../features/contact/contactSlice";
 
 const Newsletter = () => {
+  const [message, setMessage] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
+  const user = useSelector((state) => state.auth.user);
+  const { loading, success, error } = useSelector((state) => state.contact);
+
+  useEffect(() => {
+    if (success) {
+      toast.success("Message sent successfully!");
+      setMessage("");
+      dispatch(resetContactState());
+    }
+    if (error) {
+      toast.error(error);
+      dispatch(resetContactState());
+    }
+  }, [success, error, dispatch]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!user) {
+      toast.error("Please login to send a message");
+      navigate("/login");
+      return;
+    }
+    
+    dispatch(sendMessageThunk(message));
+  };
+
   return (
     <section className="bg-[#FDFCF8] py-24 border-t border-[#1A1A1A]/5 overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 lg:px-20">
@@ -54,29 +90,27 @@ const Newsletter = () => {
                   <div className="h-[1px] w-12 bg-[#1ee2b4]" />
                 </div>
 
-                <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+                <form className="space-y-8" onSubmit={handleSubmit}>
                   <div className="space-y-6">
-                    <div className="relative">
-                      <input
-                        type="text"
-                        required
-                        placeholder="YOUR NAME"
-                        className="w-full bg-transparent border-b border-[#1A1A1A]/10 py-3 outline-none text-[11px] font-bold tracking-[0.3em] text-[#1A1A1A] placeholder:text-[#1A1A1A]/30 focus:border-[#1ee2b4] transition-all duration-500 uppercase"
-                      />
-                    </div>
                     <div className="relative">
                       <textarea
                         required
-                        rows={1}
+                        rows={3}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                         placeholder="WHAT'S ON YOUR MIND?"
                         className="w-full bg-transparent border-b border-[#1A1A1A]/10 py-3 outline-none text-[11px] font-bold tracking-[0.3em] text-[#1A1A1A] placeholder:text-[#1A1A1A]/30 focus:border-[#1ee2b4] transition-all duration-500 uppercase resize-none"
                       />
                     </div>
                   </div>
 
-                  <button className="group flex items-center justify-between w-full bg-[#236656] text-[#FDFCF8] px-8 py-5 rounded-full hover:bg-[#1a4d41] transition-all duration-500 shadow-xl shadow-[#236656]/10">
+                  <button 
+                    type="submit"
+                    disabled={loading}
+                    className="group flex items-center justify-between w-full bg-[#236656] text-[#FDFCF8] px-8 py-5 rounded-full hover:bg-[#1a4d41] transition-all duration-500 shadow-xl shadow-[#236656]/10 disabled:opacity-50"
+                  >
                     <span className="text-[10px] font-bold uppercase tracking-[0.5em]">
-                      Send Message
+                      {loading ? "Sending..." : user ? "Send Message" : "Login to Send"}
                     </span>
                     <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500 text-[#1ee2b4]" />
                   </button>
