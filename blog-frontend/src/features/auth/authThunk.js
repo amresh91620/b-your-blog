@@ -65,7 +65,6 @@ export const forgotPasswordThunk = createAsyncThunk(
   "auth/forgotPassword",
   async (email, { rejectWithValue }) => {
     try {
-      // FIX: axios.post ki jagah service function use karein
       const res = await forgotPasswordRequest(email); 
       return res.data;
     } catch (err) {

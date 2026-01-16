@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 
 const App = () => {
   const location = useLocation();
-  const authPages = ['/dashboard', '/login', '/register', '/forget-password'];
+  const authPages = ['/dashboard', '/admin', '/login', '/register', '/forget-password'];
   const hideNavbarFooter = authPages.includes(location.pathname);
 
   return (
@@ -17,7 +17,9 @@ const App = () => {
       <AppRoutes />
       {!hideNavbarFooter && <Footer/>}
       <Toaster 
-        position="top-right" 
+        position="top-right"
+        reverseOrder={false}
+        gutter={8}
         toastOptions={{
           duration: 4000,
           style: {

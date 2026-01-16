@@ -60,9 +60,13 @@ const Dashboard = () => {
   ];
 
   const handleLogout = () => {
-    dispatch(logout());
-    toast.success("You are successfully logged out");
-    navigate("/");
+    if (window.confirm("Are you sure you want to log out?")) {
+      dispatch(logout());
+      toast.success("You are successfully logged out");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 500);
+    }
   };
 
   const handleBackToHome = () => navigate("/");

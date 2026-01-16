@@ -58,11 +58,13 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    dispatch(logout());
-    setIsProfileOpen(false);
-    setIsMobileMenuOpen(false);
-    toast.success("You are successfully logged out");
-    navigate("/");
+    if (window.confirm("Are you sure you want to log out?")) {
+      dispatch(logout());
+      setIsProfileOpen(false);
+      setIsMobileMenuOpen(false);
+      toast.success("You are successfully logged out");
+      window.location.href = "/";
+    }
   };
 
   return (
