@@ -4,12 +4,29 @@ const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, unique: true, required: true, lowercase: true },
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
+
     password: { type: String, required: true },
-    role: { type: String, enum: ["user", "admin"], default: "user" },
+
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+
     isVerified: { type: Boolean, default: false },
 
-    // RESET PASSWORD OTP (SAFE)
+    // ✅ PROFILE (OPTIONAL – REGISTER TIME EMPTY)
+    bio: { type: String, default: "" },
+    profileImage: { type: String, default: "" },
+
+    // RESET PASSWORD
     resetOtp: String,
     resetOtpExpire: Date,
 
@@ -20,11 +37,12 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Password hashing
+// 🔐 password hashing
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
+
 module.exports = mongoose.model("User", userSchema);

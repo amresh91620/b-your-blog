@@ -144,7 +144,7 @@ const Navbar = () => {
                     <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-[#236656] border-2 border-white ring-2 ring-[#236656]/20 overflow-hidden transition-all duration-300 group-hover:ring-[#236656]/40 cursor-pointer flex items-center justify-center">
                       {user?.avatar ? (
                         <img
-                          src={user.avatar}
+                          src={user.profileImage}
                           className="w-full h-full object-cover"
                           alt="avatar"
                         />
