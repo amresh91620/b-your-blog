@@ -36,9 +36,6 @@ const Navbar = () => {
     { name: "CONTACT", path: "/contact", icon: Mail },
   ];
 
-  useEffect(() => {
-    dispatch(fetchProfile());
-  }, [dispatch]);
 
   useEffect(() => {
     const handleResize = () => {

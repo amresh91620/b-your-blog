@@ -2,20 +2,17 @@ const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
   try {
-    // Get token from header or cookie
-    const authHeader = req.headers.authorization;
-    const token = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : req.cookies?.token;
-
+    const token = req.headers.authorization?.split(" ")[1] || req.cookies?.token;
+    
     if (!token) {
-      return res.status(401).json({ msg: "Please login to continue" });
+      return res.status(401).json({ msg: "Please login to send a message" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "default_secret");
     req.userId = decoded.id;
     next();
   } catch (error) {
-    console.error("Auth error:", error.message);
-    return res.status(401).json({ msg: "Invalid or expired token. Please login again" });
+    return res.status(401).json({ msg: "Invalid token. Please login again" });
   }
 };
 
