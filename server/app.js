@@ -21,7 +21,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Static folder for local images (optional)
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ✅ Routes

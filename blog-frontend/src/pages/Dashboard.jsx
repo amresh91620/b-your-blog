@@ -2,32 +2,19 @@ import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  Home as HomeIcon,
-  FileText,
-  Plus,
-  MessageCircle,
-  User,
-  Bookmark,
-  Bell,
-  BarChart3,
-  Settings,
-  LogOut,
-  Menu,
-  X,
-  ArrowLeft,
-  Search,
-} from "lucide-react";
-
+  Home as HomeIcon, FileText, Plus, MessageCircle, User,
+  Bell, BarChart3, Settings, LogOut, Menu, X, ArrowLeft, ChevronRight
+} from "lucide-react"; 
 import { logout } from "../features/auth/authSlice";
+import { fetchProfile } from "../features/auth/profileSlice";
 
 import DashboardHome from "./dashboard/DashboardHome";
 import MyBlogs from "./dashboard/MyBlogs";
 import CreateBlog from "./dashboard/CreateBlog";
 import Comments from "./dashboard/Comments";
 import Profile from "./dashboard/Profile";
-import Bookmarks from "./dashboard/Bookmarks";
 import Notifications from "./dashboard/Notifications";
 import Analytics from "./dashboard/Analytics";
 import SettingsSecurity from "./dashboard/SettingsSecurity";
@@ -39,51 +26,40 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.user);
+  const authUser = useSelector((state) => state.auth?.user || null);
+  const user = useSelector((state) => state.profile?.user || authUser);
 
   useEffect(() => {
-    if (location.state?.activeTab) {
-      setActiveTab(location.state.activeTab);
-    }
-  }, [location.state]);
+    if (location.state?.activeTab) setActiveTab(location.state.activeTab);
+    dispatch(fetchProfile());
+  }, [location.state, dispatch]);
 
   const menuItems = [
-    { id: "home", label: "Overview", icon: HomeIcon },
+    { id: "home", label: "Dashboard", icon: HomeIcon },
     { id: "blogs", label: "My Stories", icon: FileText },
-    { id: "create", label: "Write New", icon: Plus },
+    { id: "create", label: "New Publication", icon: Plus },
     { id: "comments", label: "Engagements", icon: MessageCircle, badge: 5 },
-    { id: "analytics", label: "Insights", icon: BarChart3 },
-    { id: "bookmarks", label: "Saved", icon: Bookmark },
+    { id: "analytics", label: "Performance", icon: BarChart3 },
     { id: "notifications", label: "Inbox", icon: Bell, badge: 3 },
     { id: "profile", label: "Account", icon: User },
-    { id: "settings", label: "Preferences", icon: Settings },
+    { id: "settings", label: "Settings", icon: Settings },
   ];
 
   const handleLogout = () => {
-    if (window.confirm("Are you sure you want to log out?")) {
+    if (window.confirm("Are you sure you want to end your session?")) {
       dispatch(logout());
-      toast.success("You are successfully logged out");
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 500);
+      toast.success("Signed out safely");
+      setTimeout(() => { window.location.href = "/"; }, 500);
     }
-  };
-
-  const handleBackToHome = () => navigate("/");
-
-  const handleCreateBlog = () => {
-    setActiveTab("create");
-    setSidebarOpen(false);
   };
 
   const renderContent = () => {
     const components = {
       home: <DashboardHome />,
-      blogs: <MyBlogs onCreateBlog={handleCreateBlog} />,
+      blogs: <MyBlogs onCreateBlog={() => setActiveTab("create")} />,
       create: <CreateBlog />,
       comments: <Comments />,
       profile: <Profile />,
-      bookmarks: <Bookmarks />,
       notifications: <Notifications />,
       analytics: <Analytics />,
       settings: <SettingsSecurity />,
@@ -92,163 +68,161 @@ const Dashboard = () => {
   };
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen bg-[#FDFDFD] text-zinc-900 flex overflow-hidden font-sans"
-    >
+    <div className="h-screen w-full bg-[#F8FAFC] flex overflow-hidden font-sans antialiased text-slate-900">
+      
       {/* Mobile Overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-zinc-900/20 backdrop-blur-sm z-40 lg:hidden transition-opacity"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSidebarOpen(false)}
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[45] lg:hidden"
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
-      <motion.aside
-        initial={{ opacity: 0, x: -30 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-64
-        bg-white border-r border-zinc-100
-        transform transition-all duration-500 ease-in-out
+      <aside
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-72 bg-[#0F172A] transform transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] 
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
         <div className="flex flex-col h-full">
-          {/* Logo Section */}
-          <div className="h-19 m-1 flex items-center px-6 bg-[#236656] border-b border-white rounded-xl">
-
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#000000] rounded-lg flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rotate-45" />
+          {/* Brand Logo with Close Button for Mobile */}
+          <div className="h-24 flex items-center justify-between px-8">
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
+              <div className="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                <div className="w-4 h-4 bg-white rounded-full animate-pulse" />
               </div>
-              <span className="text-lg font-bold tracking-tight">STUDIO</span>
+              <span className="text-white text-xl font-bold tracking-tight">Studio<span className="text-emerald-500">.</span></span>
             </div>
-            <button
+
+            {/* FIX 1: Close Button for Mobile */}
+            <button 
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden ml-auto p-2 text-zinc-400"
+              className="lg:hidden p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
             >
-              <X size={20} />
+              <X size={22} />
             </button>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-4 space-y-1 relative bg-[#236656] rounded">
-            <p className="px-4 text-[15px] font-bold text-white  uppercase tracking-widest mb-4">
-              Menu
-            </p>
+          <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto no-scrollbar">
+            <p className="px-5 text-[11px] font-semibold text-slate-500 uppercase tracking-[0.2em] mb-4">Management</p>
             {menuItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
               return (
-                <div key={item.id} className="relative">
-                  {isActive && (
-                    <motion.div 
-                      layoutId="activeIndicator"
-                      className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-10 bg-[#f5f5f5] rounded-r-full "
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
+                <button
+                  key={item.id}
+                  onClick={() => { setActiveTab(item.id); setSidebarOpen(false); }}
+                  className={`w-full flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all duration-300 group
+                  ${isActive 
+                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+                    : "text-slate-400 hover:text-white hover:bg-white/5"}`}
+                >
+                  <div className="flex items-center gap-4">
+                    <Icon size={19} className={isActive ? "text-emerald-400" : "group-hover:text-white"} />
+                    <span className={`text-[14px] ${isActive ? "font-bold" : "font-medium"}`}>{item.label}</span>
+                  </div>
+                  {isActive && <ChevronRight size={14} className="text-emerald-400" />}
+                  {item.badge && !isActive && (
+                    <span className="bg-slate-800 text-slate-300 text-[10px] px-2 py-0.5 rounded-lg border border-slate-700 font-bold">
+                      {item.badge}
+                    </span>
                   )}
-                  <button
-                    onClick={() => {
-                      setActiveTab(item.id);
-                      setSidebarOpen(false);
-                    }}
-                    className={`relative w-60 flex items-center justify-between px-4 py-2.5 rounded-l-xl transition-all duration-200 group
-                    ${isActive 
-                      ? "bg-[#fefefe] text-black shadow-md shadow-zinc-300" 
-                      : "text-white hover:bg-zinc-50 hover:text-zinc-900"}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
-                      <span className="text-sm font-medium">{item.label}</span>
-                    </div>
-                    {item.badge && (
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold
-                        ${isActive ? "bg-white/20 text-white" : "bg-zinc-100 text-zinc-600"}`}>
-                        {item.badge}
-                      </span>
-                    )}
-                  </button>
-                </div>
+                </button>
               );
             })}
           </nav>
 
-          {/* Footer Actions */}
-          <div className="p-4 border-t border-zinc-50 space-y-1 bg-[#236656]">
+          {/* Bottom Actions */}
+          <div className="p-6 space-y-3 border-t border-white/5">
+            {/* FIX 2: Mobile Back to Web Button inside Sidebar */}
             <button 
-              onClick={handleBackToHome}
-           className="w-full flex items-center gap-3 px-4 py-2 text-sm bg-white text-black hover:bg-rose-50 rounded-xl transition-colors"
-              >
-              <ArrowLeft size={18} />
-              <span>Main Site</span>
+              onClick={() => navigate('/')}
+              className="lg:hidden w-full flex items-center gap-3 px-5 py-3 text-xs font-bold text-slate-400 hover:text-emerald-400 hover:bg-white/5 rounded-xl transition-all uppercase tracking-widest"
+            >
+              <ArrowLeft size={16} />
+              <span>Back to Web</span>
             </button>
-            <button 
+
+            <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-2 text-sm bg-white text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
+              className="w-full flex items-center gap-3 px-5 py-4 text-sm font-semibold text-slate-400 hover:text-white hover:bg-rose-500/20 hover:border-rose-500/30 border border-transparent rounded-2xl transition-all"
             >
               <LogOut size={18} />
-              <span>Sign Out</span>
+              <span>Log Out</span>
             </button>
           </div>
         </div>
-      </motion.aside>
+      </aside>
 
-      {/* Main Content Area */}
-      <motion.div 
-        initial={{ opacity: 0, x: 30 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="flex-1 flex flex-col min-w-0 h-screen"
-      >
-        {/* Top Navigation Bar */}
-        <header className="h-19 bg-[#236656] backdrop-blur-md border-b rounded-xl mx-4 mt-1 border-zinc-100 px-8 flex items-center justify-between sticky top-0 z-30">
+      {/* Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 h-full">
+        {/* Header */}
+        <header className="h-20 bg-white/70 backdrop-blur-xl border-b border-slate-200 px-6 md:px-10 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 bg-zinc-50 rounded-lg"
+            <button 
+              onClick={() => setSidebarOpen(true)} 
+              className="lg:hidden p-2.5 text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
             >
               <Menu size={20} />
             </button>
             <div>
-              <h2 className="text-sm font-bold text-zinc-900">
-                {menuItems.find((i) => i.id === activeTab)?.label}
+              <h2 className="text-base md:text-lg font-bold text-slate-900 tracking-tight">
+                {menuItems.find(i => i.id === activeTab)?.label}
               </h2>
-              <p className="text-xs text-zinc-400 hidden sm:block">
-                Welcome back, {user?.name?.split(" ")[0] || "Writer"}
-              </p>
+              <p className="text-[10px] md:text-xs font-medium text-slate-400">Welcome back, {user?.name?.split(' ')[0]}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-6">            
-            <div className="flex items-center gap-4 border-l border-zinc-100 pl-6">              
-              <div className="flex items-center gap-3 group cursor-pointer">
-                <div className="w-9 h-9 rounded-full ring-2 ring-zinc-100 ring-offset-2 overflow-hidden bg-zinc-900 flex items-center justify-center text-white text-xs font-bold transition-transform group-hover:scale-105">
-                  {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
-                </div>
+          <div className="flex items-center gap-3 md:gap-6">
+            {/* Desktop only Back to Web */}
+            <button className="hidden lg:flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-emerald-600 transition-colors uppercase tracking-widest" onClick={() => navigate('/')}>
+              <ArrowLeft size={14} /> Back to Web
+            </button>
+            
+            <div className="hidden md:block h-8 w-px bg-slate-200" />
+
+            <div className="flex items-center gap-3 group cursor-pointer" onClick={() => setActiveTab('profile')}>
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl overflow-hidden shadow-sm ring-2 ring-slate-100 group-hover:ring-emerald-500/30 transition-all duration-300">
+                {user?.profileImage ? (
+                  <img src={user.profileImage} className="w-full h-full object-cover" alt="Profile" />
+                ) : (
+                  <div className="w-full h-full bg-emerald-500 flex items-center justify-center text-white text-sm font-black">
+                    {user?.name?.charAt(0)}
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </header>
 
-        {/* Content Section */}
-        <main className="flex-1 overflow-y-auto bg-[#FDFDFD]">
-          <div className="max-w-7xl mx-auto p-6 lg:p-10">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            >
-              {renderContent()}
-            </motion.div>
+        {/* Workspace */}
+        <main className="flex-1 overflow-y-auto bg-[#F8FAFC]">
+          <div className="max-w-[1200px] mx-auto p-4 md:p-10">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                {renderContent()}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </main>
-      </motion.div>
-    </motion.div>
+      </div>
+
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
+    </div>
   );
 };
 

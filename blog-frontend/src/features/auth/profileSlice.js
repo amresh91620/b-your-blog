@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import profileService from "../../services/profileService";
 
-// FETCH PROFILE
+// Fetch profile
 export const fetchProfile = createAsyncThunk(
   "profile/fetchProfile",
   async (_, { rejectWithValue }) => {
@@ -13,7 +13,7 @@ export const fetchProfile = createAsyncThunk(
   }
 );
 
-// UPDATE PROFILE
+// Update profile
 export const updateProfile = createAsyncThunk(
   "profile/updateProfile",
   async (data, { rejectWithValue }) => {
@@ -41,12 +41,9 @@ const profileSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // FETCH PROFILE
       .addCase(fetchProfile.pending, (state) => { state.loading = true; state.error = null; })
       .addCase(fetchProfile.fulfilled, (state, action) => { state.loading = false; state.user = action.payload; })
       .addCase(fetchProfile.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
-
-      // UPDATE PROFILE
       .addCase(updateProfile.pending, (state) => { state.loading = true; state.error = null; })
       .addCase(updateProfile.fulfilled, (state, action) => { state.loading = false; state.user = action.payload; })
       .addCase(updateProfile.rejected, (state, action) => { state.loading = false; state.error = action.payload; });

@@ -1,18 +1,45 @@
-import React, { useState } from 'react';
-import { Camera, Save, Mail, User, FileText, ShieldCheck, BadgeCheck, Globe, Trash2 } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Camera, Save, User, Trash2, Loader2, X, Mail, AlignLeft, ShieldCheck, CheckCircle2, Edit3 } from 'lucide-react';
+import toast from "react-hot-toast";
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchProfile, updateProfile } from '../../features/auth/profileSlice';
+import Cropper from 'react-easy-crop';
+import getCroppedImg from '../../utils/cropImage';
 
 const Profile = () => {
-  const user = useSelector((state) => state.auth.user);
-  
+  const dispatch = useDispatch();
+  const { user, loading } = useSelector((state) => state.profile);
+
   const [profileData, setProfileData] = useState({
-    name: user?.name || 'Amresh Kumar',
-    email: user?.email || 'amresh@writeflow.com',
-    bio: 'Passionate full-stack developer with 5+ years of experience in React, Node.js, and modern web technologies. Love sharing knowledge through technical writing.',
-    avatar: null
+    name: '',
+    email: '',
+    bio: '',
+    avatar: null,
+    previewUrl: null
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [cropping, setCropping] = useState(false);
+  const [tempImage, setTempImage] = useState(null);
+
+  useEffect(() => {
+    dispatch(fetchProfile());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        name: user.name || '',
+        email: user.email || '',
+        bio: user.bio || '',
+        avatar: null,
+        previewUrl: user.profileImage || null
+      });
+    }
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,188 +47,258 @@ const Profile = () => {
   };
 
   const handleAvatarChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (file.type.startsWith('image/')) {
-        setProfileData(prev => ({ ...prev, avatar: file }));
-      }
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) return toast.error("Please select an image file");
+    if (file.size > 5 * 1024 * 1024) return toast.error("Image size should be less than 5MB");
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      setTempImage(reader.result);
+      setCropping(true);
+    };
+  };
+
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const saveCroppedImage = async () => {
+    try {
+      const croppedFile = await getCroppedImg(tempImage, croppedAreaPixels);
+      const newPreviewUrl = URL.createObjectURL(croppedFile);
+      setProfileData(prev => ({ ...prev, avatar: croppedFile, previewUrl: newPreviewUrl }));
+      setCropping(false);
+      setTempImage(null);
+      toast.success("Avatar ready to save!");
+    } catch (err) {
+      toast.error("Failed to process image");
     }
   };
 
-  const stats = [
-    { label: 'Published Blogs', value: '24', icon: FileText, color: 'text-[#236656]', bg: 'bg-[#236656]/10' },
-    { label: 'Total Read Time', value: '450h', icon: Globe, color: 'text-[#236656]', bg: 'bg-[#236656]/10' },
-    { label: 'Verified Reach', value: '12.5K', icon: BadgeCheck, color: 'text-[#236656]', bg: 'bg-[#236656]/10' },
-  ];
+  const handleSave = async () => {
+    if (profileData.name.trim().length < 3) return toast.error("Name is too short");
+    try {
+      await dispatch(updateProfile({
+        name: profileData.name,
+        bio: profileData.bio,
+        avatar: profileData.avatar
+      })).unwrap();
+      setIsEditing(false);
+      toast.success("Profile synchronized!");
+    } catch (err) {
+      toast.error(err || "Update failed");
+    }
+  };
 
   return (
-    <div className="max-w-5xl mx-auto pb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Account Settings</h1>
-          <p className="text-slate-500 font-medium">Update your presence and profile across the platform</p>
-        </div>
+    <div className="animate-in fade-in duration-500">
+      <div className="max-w-5xl mx-auto space-y-8">
         
-        <div className="flex items-center gap-3">
-          {!isEditing ? (
-            <button
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Account Settings</h1>
+            <p className="text-slate-500 mt-1 font-medium">Manage your public identity and personal details.</p>
+          </div>
+          {!isEditing && (
+            <button 
               onClick={() => setIsEditing(true)}
-              className="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl shadow-sm hover:bg-slate-50 transition-all flex items-center"
+              className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-2xl text-slate-700 font-bold shadow-sm hover:bg-slate-50 transition-all active:scale-95"
             >
-              <User size={18} className="mr-2" />
-              Edit Profile
+              <Edit3 size={18} /> Edit Profile
             </button>
-          ) : (
-            <>
-              <button
-                onClick={() => setIsEditing(false)}
-                className="px-6 py-2.5 text-slate-500 font-bold hover:bg-slate-100 rounded-xl transition-all"
-              >
-                Discard
-              </button>
-              <button
-                onClick={() => setIsEditing(false)}
-                className="px-6 py-2.5 bg-[#236656] text-white font-bold rounded-xl shadow-lg shadow-[#236656]/20 hover:bg-[#1a4d3d] transition-all flex items-center"
-              >
-                <Save size={18} className="mr-2" />
-                Save Changes
-              </button>
-            </>
           )}
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Form Details */}
-        <div className="lg:col-span-8 space-y-6">
-          <div className="bg-white rounded-3xl border border-slate-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.02)] p-8">
-            <h2 className="text-xl font-extrabold text-slate-900 mb-8 flex items-center">
-              <span className="w-2 h-6 bg-[#236656] rounded-full mr-3"></span>
-              Personal Details
-            </h2>
-
-            {/* Avatar Upload with Premium Ring */}
-            <div className="flex flex-col sm:flex-row items-center gap-8 mb-10 p-6 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* Avatar Card */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="bg-white rounded-3xl border border-slate-200 p-8 flex flex-col items-center shadow-sm">
               <div className="relative group">
-                <div className="w-32 h-32 rounded-3xl overflow-hidden ring-4 ring-white shadow-2xl shadow-slate-200">
-                  {profileData.avatar ? (
-                    <img
-                      src={URL.createObjectURL(profileData.avatar)}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#236656] to-[#1a4d3d] flex items-center justify-center text-white text-4xl font-black">
-                      {profileData.name.charAt(0)}
-                    </div>
-                  )}
+                <div className="w-40 h-40 rounded-[2.5rem] overflow-hidden ring-4 ring-slate-50 shadow-md bg-slate-100 transition-all duration-500">
+                  <img
+                    src={profileData.previewUrl || `https://ui-avatars.com/api/?name=${profileData.name}&background=10b981&color=fff`}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 {isEditing && (
-                  <label className="absolute -bottom-2 -right-2 w-10 h-10 bg-[#236656] text-white rounded-xl shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+                  <label className="absolute -bottom-2 -right-2 w-12 h-12 bg-[#0F172A] text-white rounded-2xl shadow-xl flex items-center justify-center cursor-pointer hover:bg-emerald-600 transition-all border-4 border-white">
                     <Camera size={20} />
                     <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
                   </label>
                 )}
               </div>
-              <div className="text-center sm:text-left">
-                <h4 className="text-lg font-bold text-slate-900">Profile Picture</h4>
-                <p className="text-sm text-slate-500 mb-3 leading-relaxed">PNG, JPG or GIF. Max 2MB recommended.</p>
-                {isEditing && (
-                   <button className="text-rose-600 text-sm font-bold flex items-center hover:underline">
-                      <Trash2 size={14} className="mr-1" /> Remove photo
-                   </button>
-                )}
+              
+              <div className="mt-6 text-center">
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">{profileData.name || 'User'}</h3>
+                <div className="inline-flex items-center mt-2 px-3 py-1 bg-emerald-50 text-emerald-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-emerald-100">
+                  <CheckCircle2 size={12} className="mr-1.5" /> Verified Author
+                </div>
               </div>
+
+              {isEditing && profileData.previewUrl && (
+                <button 
+                  onClick={() => setProfileData(p => ({...p, avatar: null, previewUrl: null}))} 
+                  className="mt-6 flex items-center text-rose-500 text-xs font-bold hover:bg-rose-50 px-4 py-2 rounded-xl transition-colors"
+                >
+                  <Trash2 size={14} className="mr-2" /> Remove Photo
+                </button>
+              )}
             </div>
 
-            {/* Input Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 ml-1">Full Name</label>
-                <div className="relative group">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#236656] transition-colors" size={18} />
-                  <input
-                    type="text"
-                    name="name"
-                    value={profileData.name}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#236656]/10 focus:border-[#236656] transition-all outline-none text-slate-600 font-medium disabled:opacity-60"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 ml-1">Email (Primary)</label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input
-                    type="email"
-                    value={profileData.email}
-                    disabled
-                    className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-400 cursor-not-allowed font-medium"
-                  />
-                </div>
-              </div>
-
-              <div className="md:col-span-2 space-y-2 pt-2">
-                <label className="text-sm font-bold text-slate-700 ml-1">About Me / Bio</label>
-                <textarea
-                  name="bio"
-                  value={profileData.bio}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  rows={4}
-                  className="w-full p-4 bg-white border border-slate-200 rounded-2xl focus:ring-4 focus:ring-[#236656]/10 focus:border-[#236656] transition-all outline-none text-slate-600 font-medium resize-none disabled:opacity-60 leading-relaxed"
-                />
-              </div>
+            {/* Verification Stats */}
+            <div className="bg-slate-900 rounded-3xl p-6 text-white shadow-lg shadow-slate-200">
+               <div className="flex items-center gap-4 mb-4">
+                  <div className="p-2 bg-white/10 rounded-xl"><ShieldCheck size={20} className="text-emerald-400"/></div>
+                  <span className="text-sm font-bold">Trust Badge</span>
+               </div>
+               <p className="text-xs text-slate-400 leading-relaxed">Your account is fully verified. You can publish stories and engage with the community.</p>
             </div>
           </div>
-        </div>
 
-        {/* Right Column: Sidebar Widgets */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* Stats Widget */}
-          <div className="bg-slate-900 rounded-3xl p-8 text-white shadow-xl shadow-[#236656]/10">
-            <h3 className="text-lg font-bold mb-6">Profile Analytics</h3>
-            <div className="space-y-6">
-              {stats.map((stat, idx) => (
-                <div key={idx} className="flex items-center justify-between border-b border-white/10 pb-4 last:border-0 last:pb-0">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-xl ${stat.bg} ${stat.color}`}>
-                      <stat.icon size={20} />
-                    </div>
-                    <span className="text-slate-400 text-sm font-medium">{stat.label}</span>
+          {/* Form Content Area */}
+          <div className="lg:col-span-8">
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="p-8 md:p-10">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="p-3 bg-slate-50 text-slate-600 rounded-2xl border border-slate-100">
+                    <AlignLeft size={20} />
                   </div>
-                  <span className="text-lg font-black">{stat.value}</span>
+                  <h2 className="text-xl font-bold text-slate-900">Personal Information</h2>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Security Status Widget */}
-          <div className="bg-white rounded-3xl border border-slate-200/60 p-8 shadow-sm">
-            <h3 className="text-lg font-extrabold text-slate-900 mb-6 flex items-center">
-              <ShieldCheck className="mr-2 text-[#236656]" size={22} />
-              Trust & Safety
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 rounded-2xl bg-emerald-50 border border-emerald-100">
-                <span className="text-sm font-bold text-emerald-700">Identity Verified</span>
-                <BadgeCheck className="text-emerald-600" size={18} />
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Display Name</label>
+                      <input 
+                        type="text" name="name" 
+                        value={profileData.name} 
+                        onChange={handleInputChange} 
+                        disabled={!isEditing}
+                        placeholder="Your name"
+                        className={`w-full px-5 py-4 rounded-2xl border transition-all outline-none text-sm font-semibold ${
+                          isEditing 
+                          ? 'bg-white border-slate-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5' 
+                          : 'bg-slate-50 border-transparent text-slate-500'
+                        }`}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                      <div className="relative">
+                        <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+                        <input 
+                          type="email" 
+                          value={profileData.email} 
+                          disabled 
+                          className="w-full pl-12 pr-5 py-4 bg-slate-50 border-transparent rounded-2xl text-slate-400 text-sm font-semibold cursor-not-allowed"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Short Bio</label>
+                    <textarea 
+                      name="bio" 
+                      value={profileData.bio} 
+                      onChange={handleInputChange} 
+                      disabled={!isEditing} 
+                      rows={5}
+                      placeholder="Write a few words about yourself..."
+                      className={`w-full p-5 rounded-2xl border transition-all outline-none resize-none text-sm font-semibold leading-relaxed ${
+                        isEditing 
+                        ? 'bg-white border-slate-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5' 
+                        : 'bg-slate-50 border-transparent text-slate-500'
+                      }`}
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                <span className="text-sm font-bold text-slate-600">2FA Status</span>
-                <span className="text-[10px] font-black bg-slate-200 px-2 py-0.5 rounded text-slate-700 uppercase">OFF</span>
-              </div>
-              <p className="text-[11px] text-slate-400 text-center px-2">
-                Last updated on Jan 09, 2026. Manage these in Security tab.
-              </p>
+
+              {/* Actions Footer */}
+              {isEditing && (
+                <div className="bg-slate-50 p-6 border-t border-slate-100 flex items-center justify-end gap-4">
+                  <button 
+                    onClick={() => setIsEditing(false)} 
+                    disabled={loading} 
+                    className="px-6 py-3 text-sm font-bold text-slate-500 hover:text-slate-800 transition-colors"
+                  >
+                    Discard
+                  </button>
+                  <button 
+                    onClick={handleSave} 
+                    disabled={loading} 
+                    className="px-8 py-3 bg-[#0F172A] text-white font-bold rounded-2xl shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all flex items-center disabled:opacity-70"
+                  >
+                    {loading ? (
+                      <Loader2 size={18} className="mr-2 animate-spin" />
+                    ) : (
+                      <Save size={18} className="mr-2 text-emerald-400" />
+                    )}
+                    {loading ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modern Cropper Overlay */}
+      {cropping && (
+        <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-md flex items-center justify-center z-[100] p-6">
+          <div className="bg-white w-full max-w-lg rounded-[2.5rem] overflow-hidden shadow-2xl">
+            <div className="p-6 border-b flex justify-between items-center bg-slate-50">
+              <h3 className="font-bold text-slate-800 tracking-tight">Adjust Profile Picture</h3>
+              <button onClick={() => setCropping(false)} className="p-2 hover:bg-slate-200 rounded-xl transition-all">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="relative h-72 bg-slate-200">
+              <Cropper
+                image={tempImage}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={onCropComplete}
+                cropShape="round"
+                showGrid={false}
+              />
+            </div>
+
+            <div className="p-8 space-y-6">
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs font-bold text-slate-400 uppercase">
+                   <span>Zoom</span>
+                   <span>{(zoom * 100).toFixed(0)}%</span>
+                </div>
+                <input
+                  type="range"
+                  value={zoom}
+                  min={1}
+                  max={3}
+                  step={0.1}
+                  onChange={(e) => setZoom(Number(e.target.value))}
+                  className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                />
+              </div>
+              <div className="flex gap-3">
+                <button onClick={() => setCropping(false)} className="flex-1 py-4 font-bold text-slate-400 hover:bg-slate-50 rounded-2xl transition-colors">Cancel</button>
+                <button onClick={saveCroppedImage} className="flex-1 py-4 bg-emerald-500 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 hover:bg-emerald-600 transition-all">Apply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

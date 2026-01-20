@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const { cloudinary } = require("../config/cloudinary");
 
 // GET PROFILE
 exports.getProfile = async (req, res) => {
@@ -6,8 +7,14 @@ exports.getProfile = async (req, res) => {
     const user = await User.findById(req.userId).select("-password");
     if (!user) return res.status(404).json({ msg: "User not found" });
 
+    // Ensure profileImage is a full URL
+    if (user.profileImage && !user.profileImage.startsWith("http")) {
+      user.profileImage = `${process.env.BASE_URL || "http://localhost:5000"}${user.profileImage}`;
+    }
+
     res.json(user);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: "Server error" });
   }
 };
@@ -16,18 +23,18 @@ exports.getProfile = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const updates = {};
+    const { name, bio } = req.body || {};
 
-    if (req.body.name) updates.name = req.body.name;
-    if (req.body.bio) updates.bio = req.body.bio;
+    if (name) updates.name = name;
+    if (bio) updates.bio = bio;
 
-    // If profile image uploaded
-    if (req.file) {
-      updates.profileImage = `/uploads/profile/${req.file.filename}`; // local storage
-      // If using Cloudinary: updates.profileImage = req.file.path;
+    // If a file is uploaded via Cloudinary
+    if (req.file && req.file.path) {
+      updates.profileImage = req.file.path;
     }
 
     const user = await User.findByIdAndUpdate(
-      req.userId,          // <-- use req.userId, not req.user.id
+      req.userId,
       { $set: updates },
       { new: true }
     ).select("-password");

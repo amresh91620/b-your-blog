@@ -1,12 +1,11 @@
 import axios from "axios";
 
-// Axios instance for profile APIs
+// Axios instance
 const API = axios.create({
-  baseURL: "/api/profile", // ✅ Correct endpoint
+  baseURL: "/api/profile",
   withCredentials: true,
 });
 
-// Attach JWT token from localStorage
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -14,24 +13,22 @@ API.interceptors.request.use((config) => {
 });
 
 const profileService = {
-  // GET PROFILE
   fetchProfile: async () => {
-    const res = await API.get("/"); // ✅ GET /api/profile
-    return res.data;
+    const res = await API.get("/");
+    return res.data; // user object with full profileImage URL
   },
 
-  // UPDATE PROFILE (with image upload)
   updateProfile: async (data) => {
     const formData = new FormData();
     if (data.name) formData.append("name", data.name);
     if (data.bio) formData.append("bio", data.bio);
     if (data.avatar) formData.append("profileImage", data.avatar);
 
-    const res = await API.patch("/", formData, { // ✅ PATCH /api/profile
+    const res = await API.patch("/", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    return res.data.user; // returns updated user
+    return res.data.user; // updated user
   },
 };
 

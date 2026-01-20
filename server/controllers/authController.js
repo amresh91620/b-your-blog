@@ -140,7 +140,7 @@ exports.forgotPassword = async (req, res) => {
       .digest("hex");
 
     user.resetOtp = hashedOtp;
-    user.resetOtpExpire = Date.now() + 1 * 60 * 1000; // 5 min
+    user.resetOtpExpire = Date.now() + 5 * 60 * 1000; // 5 min
     await user.save();
 
     await sendEmail({
