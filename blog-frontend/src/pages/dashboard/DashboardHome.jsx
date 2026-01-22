@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, MessageCircle, Eye, Heart, TrendingUp, Clock, ChevronRight, PlusCircle, Sparkles } from 'lucide-react';
+import { FileText, MessageCircle, Eye, Heart, TrendingUp, Clock, ChevronRight, PlusCircle, Sparkles, BookOpen, Award, Users, BarChart, Calendar, Target } from 'lucide-react';
 import { useSelector } from 'react-redux';
 
 const DashboardHome = () => {
@@ -13,10 +13,10 @@ const DashboardHome = () => {
   ];
 
   const recentActivity = [
-    { type: 'blog', title: 'How to Build a React Dashboard', views: 234, time: '2 hours ago', color: 'bg-blue-50 text-blue-600' },
-    { type: 'comment', author: 'Sarah Johnson', blog: 'JavaScript Best Practices', time: '4 hours ago', color: 'bg-[#236656]/10 text-[#236656]' },
-    { type: 'like', count: 15, blog: 'CSS Grid Layout Guide', time: '6 hours ago', color: 'bg-rose-50 text-rose-600' },
-    { type: 'view', count: 89, blog: 'Node.js Authentication', time: '1 day ago', color: 'bg-amber-50 text-amber-600' },
+    { type: 'blog', title: 'How to Build a React Dashboard', views: 234, time: '2 hours ago', color: 'bg-blue-100 text-blue-700 border-blue-200' },
+    { type: 'comment', author: 'Sarah Johnson', blog: 'JavaScript Best Practices', time: '4 hours ago', color: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+    { type: 'like', count: 15, blog: 'CSS Grid Layout Guide', time: '6 hours ago', color: 'bg-rose-100 text-rose-700 border-rose-200' },
+    { type: 'view', count: 89, blog: 'Node.js Authentication', time: '1 day ago', color: 'bg-amber-100 text-amber-700 border-amber-200' },
   ];
 
   const formattedDate = () => {
@@ -27,164 +27,251 @@ const DashboardHome = () => {
     });
   };
 
+  const formatTime = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Morning';
+    if (hour < 17) return 'Afternoon';
+    return 'Evening';
+  };
+
   return (
-    <div className="space-y-10 max-w-[1400px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-8 max-w-7xl mx-auto">
       
-      {/* Premium Welcome Header */}
-      <div className="relative overflow-hidden bg-[#236656] rounded-[2rem] p-8 lg:p-12 text-white shadow-2xl shadow-[#236656]/20">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <span className="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] font-bold tracking-widest uppercase">
-                Creator Portal
-              </span>
-              <span className="text-white/60 text-xs font-medium">| {formattedDate()}</span>
+      {/* Classic Header */}
+      <div className="relative">
+        <div className="bg-white to-slate-800 rounded-xl p-8 text-white shadow-sm border border-slate-500/50">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-px w-12 bg-emerald-500"></div>
+                <span className="text-xs font-medium text-black uppercase tracking-wider">
+                  {formatTime()} Report • {formattedDate()}
+                </span>
+              </div>
+              <h1 className="text-3xl lg:text-4xl font-serif font-semibold mb-4 text-black">
+                Good {formatTime().toLowerCase()}, <span className="text-emerald-300">{user?.name?.split(' ')[0] || 'Writer'}</span>
+              </h1>
+              <p className="text-slate-800 max-w-lg leading-relaxed">
+                Your creative journey continues.
+              </p>
             </div>
-            <h1 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-              Welcome back, <span className="text-emerald-300">{user?.name?.split(' ')[0] || 'Creator'}</span>
-            </h1>
-            <p className="text-emerald-50/70 max-w-lg text-lg leading-relaxed">
-              Your creative influence is growing. You’ve gained <span className="text-white font-bold underline decoration-emerald-400 underline-offset-4">12% more engagement</span> than last month.
-            </p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button className="group flex items-center justify-center gap-2 bg-white text-[#236656] px-8 py-4 rounded-2xl font-bold hover:bg-emerald-50 transition-all active:scale-95 shadow-lg shadow-black/10">
-              <PlusCircle size={20} className="group-hover:rotate-90 transition-transform duration-300" />
-              Write New Story
-            </button>
+            
+            <div className="flex gap-4">
+              <button className="group flex items-center justify-center gap-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-6 py-3.5 rounded-lg font-medium hover:from-emerald-700 hover:to-emerald-800 transition-all shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/30">
+                <PlusCircle size={18} className="group-hover:rotate-90 transition-transform duration-300" />
+                Compose Story
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-400/10 rounded-full blur-[100px] -mr-32 -mt-32" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-[80px] -ml-20 -mb-20" />
+        
+        {/* Decorative Corner */}
+        <div className="absolute -top-2 -right-2 w-16 h-16 border-t-2 border-r-2 border-emerald-500 rounded-tr-xl"></div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Classic Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <div key={index} className="group bg-white rounded-3xl p-7 border border-zinc-100 hover:border-[#236656]/30 transition-all duration-500 hover:shadow-xl hover:shadow-[#236656]/5">
-              <div className="flex items-center justify-between mb-5">
-                <div className="p-3 bg-zinc-50 rounded-2xl group-hover:bg-[#236656] group-hover:text-white transition-all duration-500 group-hover:rotate-6">
-                  <Icon size={22} strokeWidth={2} />
+            <div key={index} className="bg-white rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-2.5 bg-slate-100 rounded-lg">
+                    <Icon size={20} className="text-slate-600" />
+                  </div>
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-medium">
+                    <TrendingUp size={12} />
+                    {stat.change}
+                  </div>
                 </div>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[11px] font-bold">
-                  <TrendingUp size={12} />
-                  {stat.change}
-                </div>
+                <p className="text-sm text-slate-500 font-medium mb-1">{stat.label}</p>
+                <h3 className="text-2xl font-bold text-slate-900 font-serif">{stat.value}</h3>
               </div>
-              <p className="text-zinc-500 text-xs font-bold uppercase tracking-wider">{stat.label}</p>
-              <h3 className="text-3xl font-bold text-zinc-900 mt-2 tracking-tight group-hover:translate-x-1 transition-transform">{stat.value}</h3>
             </div>
           );
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Recent Activity Feed (3/5 Columns) */}
-        <div className="lg:col-span-3 bg-white rounded-[2rem] border border-zinc-100 shadow-sm overflow-hidden flex flex-col">
-          <div className="p-8 border-b border-zinc-50 flex items-center justify-between bg-zinc-50/30">
-            <div>
-              <h3 className="text-xl font-bold text-zinc-900">Activity Stream</h3>
-              <p className="text-xs text-zinc-500 mt-1">Real-time updates from your readers</p>
+        {/* Recent Activity Feed */}
+        <div className="lg:col-span-2 bg-white rounded-lg border border-slate-200 shadow-sm">
+          <div className="p-6 border-b border-slate-100">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-slate-100 rounded-lg">
+                  <BookOpen size={18} className="text-slate-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900">Recent Activity</h3>
+                  <p className="text-sm text-slate-500">Latest updates from your readers</p>
+                </div>
+              </div>
+              <button className="text-sm font-medium text-emerald-600 hover:text-emerald-700">
+                View All →
+              </button>
             </div>
-            <button className="text-[11px] font-bold text-[#236656] hover:bg-[#236656]/5 px-4 py-2 rounded-xl transition-all uppercase tracking-widest border border-[#236656]/10">
-              View All
-            </button>
           </div>
           
-          <div className="divide-y divide-zinc-50 px-8">
+          <div className="divide-y divide-slate-100">
             {recentActivity.map((activity, index) => (
-              <div key={index} className="py-6 flex items-start justify-between group cursor-pointer transition-all hover:px-2">
-                <div className="flex gap-5">
-                  <div className={`mt-1 p-3 rounded-2xl shadow-sm ${activity.color} group-hover:scale-110 transition-transform`}>
+              <div key={index} className="p-5 hover:bg-slate-50/50 transition-colors cursor-pointer">
+                <div className="flex items-start gap-4">
+                  <div className={`p-3 rounded-lg border ${activity.color}`}>
                     {activity.type === 'blog' && <FileText size={18} />}
                     {activity.type === 'comment' && <MessageCircle size={18} />}
                     {activity.type === 'like' && <Heart size={18} />}
                     {activity.type === 'view' && <Eye size={18} />}
                   </div>
-                  <div>
-                    <div className="text-[15px] font-bold text-zinc-900 leading-tight group-hover:text-[#236656] transition-colors">
-                      {activity.type === 'blog' && `Story Published: "${activity.title}"`}
-                      {activity.type === 'comment' && `${activity.author} shared a thought`}
-                      {activity.type === 'like' && `Gained ${activity.count} new appreciations`}
-                      {activity.type === 'view' && `${activity.count} unique readers visited`}
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-medium text-slate-900 mb-1">
+                          {activity.type === 'blog' && `Published: "${activity.title}"`}
+                          {activity.type === 'comment' && `${activity.author} commented`}
+                          {activity.type === 'like' && `Gained ${activity.count} new likes`}
+                          {activity.type === 'view' && `${activity.count} unique readers visited`}
+                        </h4>
+                        <p className="text-sm text-slate-500">
+                          {activity.blog ? `"${activity.blog}"` : "Just now"}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-slate-400">
+                        <Clock size={12} />
+                        {activity.time}
+                      </div>
                     </div>
-                    <p className="text-sm text-zinc-400 mt-1.5 italic">
-                      {activity.blog ? `"${activity.blog}"` : "Active now"}
-                    </p>
                   </div>
-                </div>
-                <div className="text-[10px] font-bold text-zinc-300 uppercase flex items-center gap-1 bg-zinc-50 px-2 py-1 rounded-lg">
-                   <Clock size={10} />
-                   {activity.time}
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Sidebar Insights (2/5 Columns) */}
-        <div className="lg:col-span-2 space-y-8">
+        {/* Sidebar Insights */}
+        <div className="space-y-6">
           
-          {/* Top Story Spotlight */}
-          <div className="bg-zinc-900 rounded-[2rem] p-8 text-white relative overflow-hidden group shadow-2xl">
-            <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-8">
-                <Sparkles size={16} className="text-emerald-400" />
-                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Featured Story</span>
+          {/* Featured Story */}
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg p-6 text-white border border-slate-700">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-emerald-500/20 rounded-lg">
+                <Award size={18} className="text-emerald-400" />
               </div>
-              
-              <h4 className="text-2xl font-bold leading-tight mb-4 group-hover:text-emerald-300 transition-colors">
-                How to Build a React Dashboard
-              </h4>
-              <p className="text-zinc-400 text-sm leading-relaxed mb-8">
-                This story is trending in <span className="text-white font-medium">#webdevelopment</span>. Engagement is 40% higher than your average.
-              </p>
-              
-              <div className="grid grid-cols-3 gap-6 py-6 border-y border-white/5">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-tighter">Views</p>
-                  <p className="text-xl font-bold italic">1.2k</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-tighter">Likes</p>
-                  <p className="text-xl font-bold italic text-emerald-400">89</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-tighter">Growth</p>
-                  <p className="text-xl font-bold italic">+24%</p>
-                </div>
+              <div>
+                <p className="text-xs font-medium text-slate-300 uppercase tracking-wider">Top Story</p>
+                <h4 className="text-lg font-semibold">How to Build a React Dashboard</h4>
               </div>
-              
-              <button className="w-full mt-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 transition-all rounded-2xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-3">
-                Analyze Performance <ChevronRight size={14} />
-              </button>
             </div>
-          </div>
-          
-          {/* Smart Tip */}
-          <div className="bg-emerald-50/50 border border-emerald-100 rounded-[2rem] p-8">
-            <div className="flex items-center gap-4 mb-4">
-               <div className="w-12 h-12 bg-[#236656] rounded-2xl flex items-center justify-center text-white shadow-lg shadow-[#236656]/20">
-                  <TrendingUp size={20} />
-               </div>
-               <div>
-                 <p className="text-sm font-bold text-zinc-900 italic underline decoration-emerald-200">Writing Tip</p>
-                 <p className="text-[11px] text-[#236656] font-bold uppercase tracking-wider">SEO Alert</p>
-               </div>
-            </div>
-            <p className="text-sm text-zinc-600 leading-relaxed italic">
-              "Stories with <span className="font-bold text-[#236656]">React Tutorial</span> in the title are currently getting 3x more organic traffic. Consider a follow-up story."
+            
+            <p className="text-slate-300 text-sm mb-6 leading-relaxed">
+              Trending in <span className="text-emerald-300 font-medium">#webdevelopment</span> with 40% higher engagement.
             </p>
+            
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="text-center p-3 bg-white/5 rounded-lg">
+                <p className="text-xs text-slate-400 mb-1">Views</p>
+                <p className="text-xl font-bold">1.2k</p>
+              </div>
+              <div className="text-center p-3 bg-white/5 rounded-lg">
+                <p className="text-xs text-slate-400 mb-1">Likes</p>
+                <p className="text-xl font-bold text-emerald-400">89</p>
+              </div>
+              <div className="text-center p-3 bg-white/5 rounded-lg">
+                <p className="text-xs text-slate-400 mb-1">Growth</p>
+                <p className="text-xl font-bold">+24%</p>
+              </div>
+            </div>
+            
+            <button className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors">
+              Analyze Performance
+              <ChevronRight size={16} />
+            </button>
           </div>
           
-        </div>
+          {/* Performance Insights */}
+          <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <BarChart size={18} className="text-blue-600" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-slate-900">Performance Insights</h4>
+                <p className="text-sm text-slate-500">Weekly statistics</p>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">Reader Engagement</span>
+                <span className="text-sm font-medium text-emerald-600">+12%</span>
+              </div>
+              <div className="w-full bg-slate-100 rounded-full h-2">
+                <div className="bg-emerald-500 rounded-full h-2" style={{ width: '75%' }}></div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">Story Completion</span>
+                <span className="text-sm font-medium text-blue-600">+8%</span>
+              </div>
+              <div className="w-full bg-slate-100 rounded-full h-2">
+                <div className="bg-blue-500 rounded-full h-2" style={{ width: '65%' }}></div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-slate-600">New Followers</span>
+                <span className="text-sm font-medium text-rose-600">+15%</span>
+              </div>
+              <div className="w-full bg-slate-100 rounded-full h-2">
+                <div className="bg-rose-500 rounded-full h-2" style={{ width: '85%' }}></div>
+              </div>
+            </div>
+          </div>
 
+          {/* Quick Stats */}
+          <div className="bg-gradient-to-br from-slate-50 to-white rounded-lg border border-slate-200 shadow-sm p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-amber-100 rounded-lg">
+                <Sparkles size={18} className="text-amber-600" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-slate-900">Quick Stats</h4>
+                <p className="text-sm text-slate-500">At a glance</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white p-4 rounded-lg border border-slate-100">
+                <div className="flex items-center gap-2 mb-2">
+                  <Users size={14} className="text-slate-500" />
+                  <span className="text-xs text-slate-500">Followers</span>
+                </div>
+                <p className="text-lg font-bold text-slate-900">2.4K</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border border-slate-100">
+                <div className="flex items-center gap-2 mb-2">
+                  <Calendar size={14} className="text-slate-500" />
+                  <span className="text-xs text-slate-500">This Week</span>
+                </div>
+                <p className="text-lg font-bold text-slate-900">156</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border border-slate-100">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp size={14} className="text-slate-500" />
+                  <span className="text-xs text-slate-500">Avg. Read</span>
+                </div>
+                <p className="text-lg font-bold text-slate-900">4.2m</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg border border-slate-100">
+                <div className="flex items-center gap-2 mb-2">
+                  <Award size={14} className="text-slate-500" />
+                  <span className="text-xs text-slate-500">Rank</span>
+                </div>
+                <p className="text-lg font-bold text-slate-900">#42</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

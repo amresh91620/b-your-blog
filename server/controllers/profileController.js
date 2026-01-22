@@ -50,3 +50,12 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({ msg: "Profile update failed" });
   }
 };
+
+
+// export.changePassword = async (params) => {
+//   try {
+//     const {p}
+//   } catch (error) {
+    
+//   }
+// }

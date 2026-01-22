@@ -38,6 +38,9 @@ const Navbar = () => {
 
 
   useEffect(() => {
+    dispatch(fetchProfile());
+  }, [dispatch]);
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1024) setIsMobileMenuOpen(false);
     };
@@ -76,7 +79,7 @@ const Navbar = () => {
       <nav
         className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
           scrolled
-            ? "bg-white/90 backdrop-blur-xl py-3 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border-b border-slate-100"
+            ? "bg-white/90 backdrop-blur-xl py-3 shadow-[0_4px_20px_rgba(0,0,0,0.03)]  border-slate-100"
             : "bg-transparent py-6 md:py-8"
         }`}
       >

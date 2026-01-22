@@ -104,7 +104,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    const expiresIn = rememberMe ? "7d" : "1h";
+    const expiresIn = rememberMe ? "30d" : "7d";
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
@@ -140,7 +140,7 @@ exports.forgotPassword = async (req, res) => {
       .digest("hex");
 
     user.resetOtp = hashedOtp;
-    user.resetOtpExpire = Date.now() + 1 * 60 * 1000; // 5 min
+    user.resetOtpExpire = Date.now() + 5 * 60 * 1000; // 5 min
     await user.save();
 
     await sendEmail({
