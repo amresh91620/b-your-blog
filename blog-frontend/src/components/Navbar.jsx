@@ -38,8 +38,11 @@ const Navbar = () => {
 
 
   useEffect(() => {
-    dispatch(fetchProfile());
-  }, [dispatch]);
+    // Only fetch profile if user is authenticated
+    if (authUser) {
+      dispatch(fetchProfile());
+    }
+  }, [dispatch, authUser]);
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1024) setIsMobileMenuOpen(false);

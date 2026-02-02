@@ -115,6 +115,7 @@ const ForgotPassword = () => {
                       <input
                         type="email"
                         required
+                        autoComplete="email"
                         placeholder="Enter registered email"
                         className="w-full pl-14 pr-5 py-4 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all shadow-sm"
                         value={email}
@@ -175,6 +176,7 @@ const ForgotPassword = () => {
                       <input
                         type={showNewPassword ? "text" : "password"}
                         required
+                        autoComplete="new-password"
                         placeholder="New password"
                         className="w-full pl-14 pr-14 py-4 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 transition-all text-sm shadow-sm"
                         value={formData.newPassword}
@@ -190,6 +192,7 @@ const ForgotPassword = () => {
                       <input
                         type={showConfirmPassword ? "text" : "password"}
                         required
+                        autoComplete="new-password"
                         placeholder="Confirm new password"
                         className="w-full pl-14 pr-14 py-4 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 transition-all text-sm shadow-sm"
                         value={formData.confirmPassword}

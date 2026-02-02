@@ -33,6 +33,7 @@ const userSchema = new mongoose.Schema(
     loginAttempts: { type: Number, default: 0 },
     lockUntil: Date,
     refreshToken: String,
+    tokenVersion: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

@@ -165,6 +165,7 @@ const Register = () => {
                           name="name"
                           value={formData.name}
                           onChange={handleChange}
+                          autoComplete="name"
                           placeholder="Your Name"
                           className="w-full pl-14 pr-5 py-3.5 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 transition-all text-sm shadow-sm"
                           required
@@ -182,6 +183,7 @@ const Register = () => {
                           value={formData.email}
                           onChange={handleChange}
                           disabled={otpSent || emailVerified}
+                          autoComplete="email"
                           placeholder="name@example.com"
                           className={`w-full pl-14 pr-12 py-3.5 rounded-full text-sm transition-all border outline-none shadow-sm
                             ${emailVerified ? "bg-emerald-50 border-emerald-100 text-emerald-700 font-medium" : "bg-white border-slate-200 focus:border-slate-400"}`}
@@ -242,6 +244,7 @@ const Register = () => {
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
+                            autoComplete="new-password"
                             placeholder="••••••••"
                             className="w-full pl-12 pr-10 py-3.5 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 text-sm shadow-sm"
                             required
@@ -260,6 +263,7 @@ const Register = () => {
                             name="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={handleChange}
+                            autoComplete="new-password"
                             placeholder="••••••••"
                             className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-full outline-none focus:border-slate-400 text-sm shadow-sm"
                             required

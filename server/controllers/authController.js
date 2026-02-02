@@ -204,3 +204,78 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 };
+
+// ================== CHANGE PASSWORD ==================
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.userId;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Current password is incorrect" });
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({
+        msg: "Password must be strong (8 chars, upper, lower, number, special)",
+      });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ msg: "Password changed successfully" });
+  } catch (err) {
+    console.error("Change Password Error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+// ================== LOGOUT ALL SESSIONS ==================
+exports.logoutAllSessions = async (req, res) => {
+  try {
+    const userId = req.userId;
+    
+    // Update user's tokenVersion to invalidate all existing tokens
+    await User.findByIdAndUpdate(userId, { 
+      $inc: { tokenVersion: 1 } 
+    });
+
+    res.json({ msg: "All sessions logged out successfully" });
+  } catch (err) {
+    console.error("Logout All Sessions Error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+// ================== DELETE ACCOUNT ==================
+exports.deleteAccount = async (req, res) => {
+  try {
+    const { password } = req.body;
+    const userId = req.userId;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Password is incorrect" });
+    }
+
+    await User.findByIdAndDelete(userId);
+
+    res.json({ msg: "Account deleted successfully" });
+  } catch (err) {
+    console.error("Delete Account Error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};

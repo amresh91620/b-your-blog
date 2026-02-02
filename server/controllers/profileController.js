@@ -52,10 +52,10 @@ exports.updateProfile = async (req, res) => {
 };
 
 
-// export.changePassword = async (params) => {
-//   try {
-//     const {p}
-//   } catch (error) {
+exports.changePassword =async (req,res) => {
+  try {
     
-//   }
-// }
+  } catch (error) {
+    
+  }
+}

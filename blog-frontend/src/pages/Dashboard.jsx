@@ -46,8 +46,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (location.state?.activeTab) setActiveTab(location.state.activeTab);
-    dispatch(fetchProfile());
-  }, [location.state, dispatch]);
+    // Only fetch profile if user is authenticated
+    if (authUser) {
+      dispatch(fetchProfile());
+    }
+  }, [location.state, dispatch, authUser]);
 
   const menuItems = [
     { id: "home", label: "Dashboard", icon: HomeIcon, badge: null },
